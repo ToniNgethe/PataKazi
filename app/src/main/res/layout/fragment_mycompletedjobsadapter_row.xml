@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/sdsass"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="42dp"
+                    android:layout_height="38dp"
+                    android:id="@+id/pb_mycompletedjobs_loading"
+                    android:padding="5dp"
+                    android:layout_margin="3dp" />
+
+                <ImageView
+                    app:srcCompat="@mipmap/background"
+                    android:id="@+id/iv_mycompletedjobadapter_jobimg"
+                    android:scaleType="centerCrop"
+                    android:layout_margin="5dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:text="Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_mycompletedjobadapt_title"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:layout_gravity="center"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent" />
+            </LinearLayout>
+
+            <View
+                android:layout_below="@id/sdsass"
+                android:layout_width="match_parent"
+                android:id="@+id/sdsdsds"
+                android:layout_height="2dp"
+                android:background="@color/colorAccent"/>
+
+            <LinearLayout
+                android:layout_below="@+id/sdsdsds"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="Ratings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView22"
+                    android:padding="5dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/colorAccent" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RatingBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="10"
+                        android:id="@+id/rb_mycompletedjobadapt_rates"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:padding="5dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:text="Not rated yet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_mycompleted_rate"
+                        android:layout_weight="1"
+                        android:padding="5dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:text="Review"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView23"
+                    android:padding="5dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/colorAccent" />
+
+                <TextView
+                    android:text="Not reviewed yet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_mycompletedjobadapter_review"
+                    android:padding="10dp"
+                    android:textColor="@color/colorPrimaryDark" />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

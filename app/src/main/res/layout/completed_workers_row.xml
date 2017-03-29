@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_margin="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="4dp">
+
+                <ProgressBar
+                    android:padding="10dp"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="43dp"
+                    android:layout_height="46dp"
+                    android:id="@+id/completedWorkRowProgress" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/completedWorkRowImage"
+                    android:layout_width="51dp"
+                    android:src="@mipmap/profile"
+                    app:civ_border_width="0dp"
+                    android:layout_gravity="left"
+                    app:civ_border_color="#FF000000"
+                    android:layout_height="51dp"
+                    android:visibility="gone"
+                    android:adjustViewBounds="false"
+                    android:layout_weight="0.02" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="4dp"
+                    android:paddingLeft="16dp">
+
+                    <TextView
+                        android:text="Username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/completedWorkRowUsername"
+                        android:padding="5dp"
+                        android:textSize="14dp"
+                        android:textStyle="normal|bold"
+                        android:textColor="@color/colorAccent" />
+
+                    <TextView
+                        android:text="Number not set"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/completedWorkRowNumber"
+                        android:padding="3dp"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:text="Not Rated"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/completedWorkRated"
+                        android:textSize="12sp"
+                        android:padding="3dp" />
+                </LinearLayout>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="3dp"
+                android:background="@android:color/darker_gray"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:weightSum="1">
+
+                <Button
+                    android:text=" Rate worker"
+                    android:layout_width="172dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rateCompletedWorker"
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:drawableLeft="@mipmap/ic_star_rate_black_18dp" />
+
+                <Button
+                    android:text="Review worker"
+                    android:layout_width="146dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/reviewCompletedWorker"
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:drawableLeft="@mipmap/ic_rate_review_black_18dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

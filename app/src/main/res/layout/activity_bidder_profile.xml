@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <RelativeLayout
+            android:id="@+id/profile_layout"
+            android:layout_width="match_parent"
+            android:background="@color/colorPrimary"
+            android:elevation="4dp"
+            android:paddingBottom="24dp"
+        android:layout_height="160dp">
+
+
+        <TextView
+                android:id="@+id/bidder_profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:text="Username"
+                android:textColor="@color/colorAccent"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/bidder_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/bidder_profile_name"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="user has not setup @string/check_your_email"
+                android:textColor="@color/colorAccent"
+                android:textSize="14sp" />
+
+        <ImageButton
+            app:srcCompat="?attr/actionModeCloseDrawable"
+            android:id="@+id/backButton"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/transparent"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@+id/assignBidderBtn" />
+
+        <Button
+                android:drawableTop="@mipmap/ic_person_add_black_24dp"
+                android:text="Assign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/assignBidderBtn"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/colorPrimaryDark"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:textAllCaps="false"
+            android:paddingTop="15dp"
+            android:textSize="12sp" />
+
+
+        </RelativeLayout>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/bidder_profilePic"
+            app:civ_border_width="0dp"
+            android:elevation="5dp"
+            app:civ_border_color="@color/colorAccent"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/profile"
+            android:layout_marginTop="120dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+
+
+            <android.support.v7.widget.CardView
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_below="@+id/bidder_profilePic"
+                android:id="@+id/infoCard">
+
+                <TextView
+                    android:text="Mobile Number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView5"
+                    android:padding="5dp"
+                    android:textSize="12sp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/colorAccent" />
+
+                <LinearLayout
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="No phone number found"
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:id="@+id/bidder_number"
+                        android:layout_weight="0.92"
+                        android:padding="5dp" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@mipmap/ic_message_black_24dp"
+                        android:id="@+id/messageBidder"
+                        android:layout_weight="0.18"
+                        android:background="@android:color/transparent" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@mipmap/ic_phone_black_24dp"
+                        android:id="@+id/call_bidder"
+                        android:layout_weight="0.17"
+                        android:background="@android:color/transparent" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@+id/infoCard"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bidder_profilePic">
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                android:layout_height="250dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="6dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@mipmap/skills"
+                            android:id="@+id/imageView5"
+                            android:layout_weight="0.05" />
+
+                        <TextView
+                            android:text="Skills"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView7"
+                            android:textSize="13sp"
+                            android:textStyle="normal|bold"
+                            android:textColor="@color/colorAccent"
+                            android:layout_weight="1"
+                            android:layout_gravity="center" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorAccent"
+                        android:id="@+id/view2"></View>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:padding="4dp"
+                        android:id="@+id/bidder_skills"
+                        android:layout_height="wrap_content"
+                        android:background="@color/com_facebook_button_login_silver_background_color" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No skills Found"
+                        android:id="@+id/emptyTextView1"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="20sp"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        android:textColor="@color/colorPrimaryDark" />
+                </LinearLayout>
+
+
+
+
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="6dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@mipmap/growth"
+                            android:id="@+id/imageView7"
+                            android:layout_weight="0.05" />
+
+                        <TextView
+                            android:text="Experiances"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView8"
+                            android:textSize="13sp"
+                            android:textStyle="normal|bold"
+                            android:textColor="@color/colorAccent"
+                            android:layout_weight="1"
+                            android:layout_gravity="center" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorAccent"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_marginTop="4dp"
+                        android:layout_width="match_parent"
+                        android:padding="10dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/bidderExperiances" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No experiances so far"
+                        android:id="@+id/emptyTextView2"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="20sp"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        android:textColor="@color/colorPrimaryDark" />
+                </LinearLayout>
+
+
+
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</RelativeLayout>

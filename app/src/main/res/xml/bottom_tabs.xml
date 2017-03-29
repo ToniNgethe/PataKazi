@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_jobs"
+        icon="@mipmap/jobs"
+        title="Jobs"
+        />
+    <tab
+        id="@+id/tab_workers"
+        icon="@mipmap/workers_team"
+        title="Workers" />
+    <tab
+        id="@+id/tab_account"
+        icon="@mipmap/ic_account_box_black_24dp"
+        title="Account" />
+</tabs>

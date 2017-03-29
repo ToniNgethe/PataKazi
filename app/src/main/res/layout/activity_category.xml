@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_category"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+
+    <Button
+        android:text="Post a job"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/postAjobBtn"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentStart="true"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_weight="0.03" />
+
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:text="POST A SKILL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/skillsBtn"
+
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignEnd="@+id/button2"
+            android:layout_weight="0.03" />
+
+
+
+</LinearLayout>

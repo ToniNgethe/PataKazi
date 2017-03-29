@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="5dp">
+
+    <ProgressBar
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/completedJobsProgress"
+        android:visibility="visible" />
+
+    <ImageView
+        android:layout_height="50dp"
+        android:id="@+id/posteCompletedImageV"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:layout_width="50dp"
+        android:visibility="visible" />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        app:cardElevation="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/posteCompletedImageV"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/completedJobTitle"
+                android:layout_margin="5dp"
+                android:textSize="15sp"
+                android:textStyle="normal|bold"
+                android:textColorHint="@color/colorAccent"
+                android:textColor="@color/colorAccent" />
+
+            <View
+                android:layout_width="match_parent"
+                android:background="@color/colorAccent"
+                android:layout_height="2dp"
+                />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+                android:stretchColumns="1">
+
+            </TableLayout>
+
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:stretchColumns="2"
+                android:paddingTop="10dp"
+                android:paddingRight="4dp">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:text=" Workers assigned"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView21"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:text="TextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/completedJobAssigned"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:textColor="@color/colorAccent" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@mipmap/ic_people_outline_black_18dp"
+                        android:id="@+id/completedWorkersAssignedbtn"
+                        android:background="@android:color/transparent" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:text="Workers completed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView19" />
+
+                    <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/completedJobComplete"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:textColor="@color/colorAccent" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@mipmap/ic_people_outline_black_18dp"
+                        android:id="@+id/completedWorkersCompletedbtn"
+                        android:background="@android:color/transparent" />
+                </TableRow>
+
+            </TableLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:background="@android:color/darker_gray"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:text="Rate job"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button4"
+                    android:layout_weight="1"
+                    android:drawableLeft="@mipmap/ic_star_rate_black_18dp"
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    style="@style/Widget.AppCompat.Button.Borderless" />
+
+                <Button
+                    android:text="Write review"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button3"
+                    android:layout_weight="1"
+                    android:drawableLeft="@mipmap/ic_rate_review_black_18dp"
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    style="@style/Widget.AppCompat.Button.Borderless" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

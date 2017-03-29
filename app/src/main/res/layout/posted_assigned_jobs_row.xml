@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="10dp"
+        android:id="@+id/cardView2"
+        app:cardElevation="5dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/topLinear"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:layout_width="47dp"
+                android:layout_height="47dp"
+                android:id="@+id/postedAssignedIndicator"
+                android:layout_weight="0.08"
+                android:layout_margin="5dp" />
+
+            <ImageView
+                app:srcCompat="@mipmap/background"
+                android:id="@+id/postedAssignedImage"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_height="47dp"
+                android:layout_weight="0.08"
+                android:layout_margin="5dp"
+                android:layout_width="47dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/postedAssignedTitle"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/colorAccent"
+                    android:textStyle="normal|bold" />
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/postedAssignedDate"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorAccent"
+                android:layout_alignBottom="@+id/topLinear"
+                android:id="@+id/view3"
+                android:layout_alignParentEnd="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_below="@id/view3"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:id="@+id/textView16"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="9dp"
+                        android:layout_toStartOf="@+id/postedAssignedConfirmedTxt"
+                        android:padding="5dp"
+                        android:text="Confirmed "
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/postedAssignedConfirmedTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="center"
+                        android:layout_toStartOf="@+id/textView12"
+                        android:padding="5dp"
+                        android:text="0"
+                        android:textSize="12sp"
+                        android:textStyle="normal|bold" />
+
+                    <ImageButton
+                        android:id="@+id/postedAssignedConfimedBtn"
+                        android:layout_width="58dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="right"
+                        android:layout_toStartOf="@+id/textView12"
+                        android:layout_weight="0.13"
+                        android:background="@android:color/transparent"
+                        android:padding="5dp"
+                        app:srcCompat="@mipmap/ic_people_outline_black_18dp" />
+
+                    <TextView
+                        android:id="@+id/textView18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
+                        android:padding="5dp"
+                        android:text="Unconfirmed"
+                        android:textSize="12sp" />
+
+                    <ImageButton
+                        android:id="@+id/postedAssignedUnConfimedBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignEnd="@+id/cardView2"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="right"
+                        android:layout_weight="0.47"
+                        android:background="@android:color/transparent"
+                        android:padding="5dp"
+                        app:srcCompat="@mipmap/ic_people_outline_black_18dp" />
+
+                </LinearLayout>
+
+                <Button
+                    android:text="close this job"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/postedAssignedCloseBtn"
+                    android:drawableLeft="@mipmap/ic_close_black_24dp"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:textSize="12sp"
+                    android:textAllCaps="false" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+</RelativeLayout>

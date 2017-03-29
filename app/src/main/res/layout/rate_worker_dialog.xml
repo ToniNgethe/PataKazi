@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:layout_alignParentStart="true">
+
+        <ImageButton
+            android:layout_marginLeft="270dp"
+            android:layout_width="54dp"
+            android:layout_height="48dp"
+            app:srcCompat="@mipmap/ic_cancel_white_24dp"
+            android:id="@+id/ratingCancelBtn"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:layout_weight="0.38" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="10"
+            android:layout_gravity="center"
+            android:stepSize="1.0"
+            android:rating="2.0"
+            style="@android:style/Widget.DeviceDefault.Light.RatingBar" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+
+            <TextView
+                android:text="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ratingTextView"
+                android:layout_weight="1"
+                android:textSize="29sp"
+                android:textStyle="normal|bold"
+                android:textColor="@color/colorAccent" />
+
+            <TextView
+                android:text="/"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView13"
+                android:layout_weight="1"
+                android:textSize="29sp"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:text="10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView11"
+                android:layout_weight="1"
+                android:textSize="29sp"
+                android:textStyle="normal|bold" />
+        </LinearLayout>
+
+        <Button
+            android:text="Submit"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/submitRatings"
+            android:textAllCaps="false"
+            style="@style/Widget.AppCompat.Button.Colored" />
+
+        <!---->
+    </LinearLayout>
+
+
+</LinearLayout>

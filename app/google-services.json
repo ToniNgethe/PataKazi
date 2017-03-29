@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1030378882851",
+    "firebase_url": "https://patakazi-60497.firebaseio.com",
+    "project_id": "patakazi-60497",
+    "storage_bucket": "patakazi-60497.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1030378882851:android:a0fbaa618280e538",
+        "android_client_info": {
+          "package_name": "com.example.toni.patakazi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1030378882851-qidufna9h7t27b595lecmm1uve7u7aso.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdCKUfJGKd-6fW84RRmBH50m150rt9k8g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
