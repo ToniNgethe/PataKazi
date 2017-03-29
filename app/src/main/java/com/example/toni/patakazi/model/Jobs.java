@@ -1,21 +1,19 @@
 package com.example.toni.patakazi.model;
 
-import android.widget.TextView;
-
 /**
  * Created by toni on 2/8/17.
  */
 
 public class Jobs {
 
-    private String image,title,postKey,location,uid,desc;
+    private String image,title,postKey,location,uid,desc,date;
     private long  charges,status,workers;
 
     public Jobs(){
 
     }
 
-    public Jobs(String image, String postKey, String title, String location, String uid, String desc, long charges, long workers, long status) {
+    public Jobs(String image, String postKey, String title, String location, String uid, String desc, long charges, long workers, long status, String date) {
         this.image = image;
         this.postKey = postKey;
         this.title = title;
@@ -25,6 +23,15 @@ public class Jobs {
         this.charges = charges;
         this.workers = workers;
         this.status = status;
+        this.date = date;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getDesc() {

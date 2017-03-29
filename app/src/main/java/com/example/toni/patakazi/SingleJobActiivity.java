@@ -2,10 +2,9 @@ package com.example.toni.patakazi;
 
 import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -14,10 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.toni.patakazi.Fragments.JobsFragment;
 import com.example.toni.patakazi.Helpers.Global;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,8 +24,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 public class SingleJobActiivity extends AppCompatActivity {
 
@@ -169,6 +163,12 @@ public class SingleJobActiivity extends AppCompatActivity {
                     location.setText(dataSnapshot.child("location").getValue().toString());
                     price.setText(dataSnapshot.child("charges").getValue().toString());
                     workers.setText(dataSnapshot.child("workers").getValue().toString());
+                    try {
+                        date.setText(dataSnapshot.child("date").getValue().toString());
+                    }catch (NullPointerException e){
+                        e.printStackTrace();
+                    }
+
 
                     //dataSnapshot.child("")
 

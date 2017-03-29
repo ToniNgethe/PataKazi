@@ -117,7 +117,7 @@ public class OpenJobsFragment extends Fragment {
 
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setPicture(getActivity(), model.getImage());
-
+                viewHolder.setDate(model.getDate());
                 viewHolder.viewBidders.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

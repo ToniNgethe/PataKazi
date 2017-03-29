@@ -65,7 +65,7 @@ public class PostedAssignedJobsAdapter extends RecyclerView.Adapter<PostedJobsVi
             final Jobs jobs = jobsList.get(position);
             holder.postesAssignedJobTitle(jobs.getTitle());
             holder.postedAssignedImage(jobs.getImage());
-
+            holder.postedAssignedJobDate(jobs.getDate());
             getJobId(holder, jobs);
 
             holder.confirmedBidders.setOnClickListener(new View.OnClickListener() {

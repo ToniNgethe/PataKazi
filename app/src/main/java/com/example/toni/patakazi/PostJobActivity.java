@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,6 +41,8 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -173,6 +176,7 @@ public class PostJobActivity extends AppCompatActivity {
                                         jobs.child("desc").setValue(desc.getText().toString());
                                         jobs.child("charges").setValue(Integer.parseInt(charges.getText().toString()));
                                         jobs.child("location").setValue(location.getText().toString());
+                                        jobs.child("date").setValue(getDate());
                                         jobs.child("image").setValue(taskSnapshot.getDownloadUrl().toString());
                                         jobs.child("uid").setValue(mAuth.getCurrentUser().getUid().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -228,6 +232,17 @@ public class PostJobActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private String getDate(){
+
+        Date date = new Date();
+        //Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
+
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+        String stringdate = dt.format(date);
+
+        return stringdate;
     }
 
     private void getJobPicture() {

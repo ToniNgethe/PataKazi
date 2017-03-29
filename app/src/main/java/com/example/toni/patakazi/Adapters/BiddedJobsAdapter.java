@@ -1,10 +1,8 @@
 package com.example.toni.patakazi.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.toni.patakazi.Helpers.Global;
 import com.example.toni.patakazi.R;
 import com.example.toni.patakazi.model.Jobs;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -59,7 +56,7 @@ public class BiddedJobsAdapter extends RecyclerView.Adapter<BidededJobsViewHolde
         holder.setBdImage(job.getImage());
         holder.setBdTitle(job.getTitle());
         holder.setBdDesc(job.getDesc());
-
+        holder.setBdDate(job.getDate());
         holder.bdImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
