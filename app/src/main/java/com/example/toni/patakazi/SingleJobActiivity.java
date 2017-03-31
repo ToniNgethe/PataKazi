@@ -170,21 +170,6 @@ public class SingleJobActiivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-
-                    //dataSnapshot.child("")
-
-//                    Picasso.with(getApplicationContext()).load(dataSnapshot.child("image").getValue().toString()).networkPolicy(NetworkPolicy.OFFLINE).into(jobImage, new Callback() {
-//                        @Override
-//                        public void onSuccess() {
-//
-//                        }
-//
-//                        @Override
-//                        public void onError() {
-//                            Picasso.with(getApplicationContext()).load(dataSnapshot.child("image").getValue().toString()).into(jobImage);
-//                        }
-//                    });
-
                     Glide.with(SingleJobActiivity.this).load(dataSnapshot.child("image").getValue().toString())
                             .thumbnail(0.5f)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -223,18 +208,6 @@ public class SingleJobActiivity extends AppCompatActivity {
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                                         .error(R.mipmap.loading)
                                         .into(profileImage);
-
-//                                Picasso.with(getApplicationContext()).load(dataSnapshot.child("image").getValue().toString()).error(R.mipmap.loading).networkPolicy(NetworkPolicy.OFFLINE).into(profileImage, new Callback() {
-//                                    @Override
-//                                    public void onSuccess() {
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onError() {
-//                                        Picasso.with(getApplicationContext()).load(dataSnapshot.child("image").getValue().toString()).error(R.mipmap.loading).into(profileImage);
-//                                    }
-//                                });
 
                             }
 
