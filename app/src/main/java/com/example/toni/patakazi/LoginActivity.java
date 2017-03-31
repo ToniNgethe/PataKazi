@@ -254,7 +254,15 @@ public class LoginActivity extends AppCompatActivity {
                         googleProgress.dismiss();
                         progressDialog.dismiss();
 
-                        startActivity(new Intent(LoginActivity.this, MainPanel.class));
+
+                        Intent launchNextActivity;
+                        launchNextActivity = new Intent(LoginActivity.this, MainPanel.class);
+                        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(launchNextActivity);
+
+                       // startActivity(new Intent(LoginActivity.this, MainPanel.class));
                         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
                     }
 
