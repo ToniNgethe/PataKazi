@@ -349,7 +349,9 @@ public class MainPanel extends AppCompatActivity {
         }
 
         if (exit) {
+
             finish(); // finish activity
+
         } else {
             Toast.makeText(this, "Press Back again to Exit.",
                     Toast.LENGTH_SHORT).show();
