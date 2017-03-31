@@ -93,7 +93,7 @@
 
 
     <com.google.android.gms.common.SignInButton
-        android:id="@+id/signinBtn"
+        android:id="@+id/google_signin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbarAlwaysDrawVerticalTrack="true"

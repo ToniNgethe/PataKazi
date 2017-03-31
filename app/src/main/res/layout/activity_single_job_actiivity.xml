@@ -17,6 +17,13 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
+            <ProgressBar
+                android:id="@+id/progress_single_jobactivity"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
             <ImageView
                 android:id="@+id/singleJobImage"
                 android:layout_width="match_parent"

@@ -2,6 +2,7 @@ package com.example.toni.patakazi.Fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.toni.patakazi.R;
+import com.example.toni.patakazi.SingleWorkerActivity;
 import com.example.toni.patakazi.model.Skills;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class WorkersFragment extends Fragment {
 
+    public static final String SKILL_KEY = "SKILL_KEY";
     private View mView;
     private RecyclerView mRecycleView;
 
@@ -77,10 +80,23 @@ public class WorkersFragment extends Fragment {
             @Override
             protected void populateViewHolder(WorkersFragmentViewHolder viewHolder, Skills model, int position) {
 
+                final String skillKey = getRef(position).getKey();
+
                 viewHolder.setWorkerImage(getActivity(),model.getImage());
                 viewHolder.setWorkerTitle(model.getTitle());
                 viewHolder.setWorkerLocation(model.getLocation());
                 viewHolder.setPrice(model.getCharges());
+
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent skillSingleView = new Intent(getActivity(), SingleWorkerActivity.class);
+                        skillSingleView.putExtra(SKILL_KEY, skillKey);
+                        startActivity(skillSingleView);
+
+                    }
+                });
 
             }
         };

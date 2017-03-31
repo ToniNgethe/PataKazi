@@ -1,17 +1,20 @@
 package com.example.toni.patakazi;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Handler;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,7 +26,11 @@ import android.widget.Toast;
 
 import com.example.toni.patakazi.Helpers.Global;
 import com.example.toni.patakazi.Helpers.GpsTracker;
-import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,11 +53,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class PostJobActivity extends AppCompatActivity {
+public class PostJobActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final int GALLERY_REQUEST = 1;
+    private static final int MY_PERMISSIONS_FINE_LOCATION = 102;
+    private static final int MY_PERMISSIONS_COURSE_LOCATION = 103;
 
-    private EditText title, desc, location, charges,workers;
+    private EditText title, desc, location, charges, workers;
     private Button locateMe, postJob;
     private ImageButton imageButton;
 
@@ -66,6 +76,25 @@ public class PostJobActivity extends AppCompatActivity {
 
     private Handler mHandler;
 
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
+
+    private Location mLastLocation;
+
+    // Google client to interact with Google API
+    private GoogleApiClient mGoogleApiClient;
+
+    // boolean flag to toggle periodic location updates
+    private boolean mRequestingLocationUpdates = false;
+
+    private LocationRequest mLocationRequest;
+
+    // Location updates intervals in sec
+    private static int UPDATE_INTERVAL = 10000; // 10 sec
+    private static int FATEST_INTERVAL = 5000; // 5 sec
+    private static int DISPLACEMENT = 10; // 10 meters
+
+    private double longitude;
+    private double latitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +102,63 @@ public class PostJobActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
         setContentView(R.layout.activity_post_job);
 
+        // First we need to check availability of play services
+        if (checkPlayServices()) {
+
+            // Building the GoogleApi client
+            buildGoogleApiClient();
+
+            createLocationRequest();
+        }
+
         setUpViews();
         initiateFireBase();
         getJobPicture();
         getLocation();
         submitJob();
 
+    }
+
+    /**
+     * Creating location request object
+     */
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
+    }
+
+    /**
+     * Creating google api client object
+     */
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API).build();
+    }
+
+    /**
+     * Method to verify google play services on the device
+     */
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "This device is not supported.", Toast.LENGTH_LONG)
+                        .show();
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 
     private void getLocation() {
@@ -90,50 +170,52 @@ public class PostJobActivity extends AppCompatActivity {
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
+//
+//                        // create class object
+                        GpsTracker gps = new GpsTracker(PostJobActivity.this);
 
-                // create class object
-               GpsTracker gps = new GpsTracker(PostJobActivity.this);
+//                        // check if GPS enabled
+                        if (gps.canGetLocation()) {
+//
+//                            double latitude = gps.getLatitude();
+//                            double longitude = gps.getLongitude();
+//
+//                            // \n is for new line
+//                            // Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+                            displayLocation();
 
-                // check if GPS enabled
-                if(gps.canGetLocation()){
+                            Geocoder geocoder;
+                            List<Address> addresses;
+                            geocoder = new Geocoder(PostJobActivity.this, Locale.getDefault());
 
-                    double latitude = gps.getLatitude();
-                    double longitude = gps.getLongitude();
-
-                    // \n is for new line
-                   // Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-
-                    Geocoder geocoder;
-                    List<Address> addresses;
-                    geocoder = new Geocoder(PostJobActivity.this, Locale.getDefault());
-
-                    try {
-                        addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                      String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                        String city = addresses.get(0).getLocality();
-                        location.setText(city+","+address);
+                            try {
+                                addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                                String city = addresses.get(0).getLocality();
+                                location.setText(city + "," + address);
 
 //                        String state = addresses.get(0).getAdminArea();
 //                        String country = addresses.get(0).getCountryName();
 //                        String postalCode = addresses.get(0).getPostalCode();
 //                        String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
-                }else{
-                    // can't get location
-                    // GPS or Network is not enabled
-                    // Ask user to enable GPS/network in settings
-                    gps.showSettingsAlert();
-                         }
+                        } else {
+                            // can't get location
+                            // GPS or Network is not enabled
+                            // Ask user to enable GPS/network in settings
+                            gps.showSettingsAlert();
+                        }
+
 
                     }
 
                 };
 
-                if (runnable != null){
+                if (runnable != null) {
 
                     mHandler.post(runnable);
 
@@ -157,8 +239,8 @@ public class PostJobActivity extends AppCompatActivity {
 
                 if (imageUri != null) {
 
-                    if ( !TextUtils.isEmpty(title.getText().toString()) && !TextUtils.isEmpty(desc.getText().toString()) && !TextUtils.isEmpty(workers.getText().toString())
-                                && !TextUtils.isEmpty(location.getText().toString()) && !TextUtils.isEmpty(charges.getText().toString())) {
+                    if (!TextUtils.isEmpty(title.getText().toString()) && !TextUtils.isEmpty(desc.getText().toString()) && !TextUtils.isEmpty(workers.getText().toString())
+                            && !TextUtils.isEmpty(location.getText().toString()) && !TextUtils.isEmpty(charges.getText().toString())) {
 
                         final DatabaseReference jobs = mJobs.push();
 
@@ -186,7 +268,7 @@ public class PostJobActivity extends AppCompatActivity {
 
                                                     progressDialog.dismiss();
                                                     startActivity(new Intent(PostJobActivity.this, MainPanel.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                                                }else {
+                                                } else {
 
                                                     progressDialog.dismiss();
                                                     //Global.showDialog("Firebase Error",task.getException().getMessage(),PostJobActivity.this);
@@ -200,7 +282,7 @@ public class PostJobActivity extends AppCompatActivity {
                                     public void onCancelled(DatabaseError databaseError) {
 
                                         progressDialog.dismiss();
-                                        Global.showDialog("Firebase Error",databaseError.getMessage(),PostJobActivity.this);
+                                        Global.showDialog("Firebase Error", databaseError.getMessage(), PostJobActivity.this);
                                     }
                                 });
 
@@ -210,7 +292,7 @@ public class PostJobActivity extends AppCompatActivity {
                             public void onFailure(@NonNull Exception e) {
 
                                 progressDialog.dismiss();
-                                Global.showDialog("Firebase Error",e.getMessage(),PostJobActivity.this);
+                                Global.showDialog("Firebase Error", e.getMessage(), PostJobActivity.this);
 
                             }
                         });
@@ -219,14 +301,14 @@ public class PostJobActivity extends AppCompatActivity {
                     } else {
 
                         progressDialog.dismiss();
-                        Global.showDialog("Input Fields","Field(s) cannot be empty",PostJobActivity.this);
+                        Global.showDialog("Input Fields", "Field(s) cannot be empty", PostJobActivity.this);
                     }
 
                 } else {
 
                     progressDialog.dismiss();
 
-                    Global.showDialog("Job image","Please select an image of the job..",PostJobActivity.this);
+                    Global.showDialog("Job image", "Please select an image of the job..", PostJobActivity.this);
                 }
 
             }
@@ -234,7 +316,7 @@ public class PostJobActivity extends AppCompatActivity {
 
     }
 
-    private String getDate(){
+    private String getDate() {
 
         Date date = new Date();
         //Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
@@ -346,6 +428,151 @@ public class PostJobActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    /**
+     * Method to display the location on UI
+     */
+    private void displayLocation() {
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            mLastLocation = LocationServices.FusedLocationApi
+                    .getLastLocation(mGoogleApiClient);
+
+            if (mLastLocation != null) {
+                latitude = mLastLocation.getLatitude();
+                longitude = mLastLocation.getLongitude();
+
+
+            } else {
+
+                Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
+            }
+
+        } else {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{
+                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                }, MY_PERMISSIONS_FINE_LOCATION);
+                requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                }, MY_PERMISSIONS_COURSE_LOCATION);
+            }
+
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case MY_PERMISSIONS_FINE_LOCATION:
+
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        mLastLocation = LocationServices.FusedLocationApi
+                                .getLastLocation(mGoogleApiClient);
+
+                        if (mLastLocation != null) {
+                             latitude = mLastLocation.getLatitude();
+                             longitude = mLastLocation.getLongitude();
+
+
+                        } else {
+
+                            Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                } else {
+
+                    Toast.makeText(PostJobActivity.this, "This app requires location permissions to be granted", Toast.LENGTH_SHORT).show();
+                    finish();
+
+                }
+
+                break;
+
+            case MY_PERMISSIONS_COURSE_LOCATION:
+
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        mLastLocation = LocationServices.FusedLocationApi
+                                .getLastLocation(mGoogleApiClient);
+
+                        if (mLastLocation != null) {
+
+                            latitude = mLastLocation.getLatitude();
+                            longitude = mLastLocation.getLongitude();
+
+
+                        } else {
+
+                            Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                } else {
+
+                    Toast.makeText(PostJobActivity.this, "This app requires location permissions to be granted", Toast.LENGTH_SHORT).show();
+                    finish();
+
+                }
+
+                break;
+
+        }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        checkPlayServices();
+
+        // Resuming the periodic location updates
+        if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
+            // startLocationUpdates();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // stopLocationUpdates();
+    }
 }

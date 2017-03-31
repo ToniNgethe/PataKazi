@@ -9,10 +9,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.toni.patakazi.Helpers.Global;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -21,9 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 public class SingleJobActiivity extends AppCompatActivity {
 
@@ -39,7 +40,7 @@ public class SingleJobActiivity extends AppCompatActivity {
     private Query mBidQudery;
     private Boolean process = true;
     private Drawable d ;
-
+    private ProgressBar mProgressBar;
     private ProgressDialog progressDialog;
 
     @Override
@@ -172,17 +173,40 @@ public class SingleJobActiivity extends AppCompatActivity {
 
                     //dataSnapshot.child("")
 
-                    Picasso.with(getApplicationContext()).load(dataSnapshot.child("image").getValue().toString()).networkPolicy(NetworkPolicy.OFFLINE).into(jobImage, new Callback() {
-                        @Override
-                        public void onSuccess() {
+//                    Picasso.with(getApplicationContext()).load(dataSnapshot.child("image").getValue().toString()).networkPolicy(NetworkPolicy.OFFLINE).into(jobImage, new Callback() {
+//                        @Override
+//                        public void onSuccess() {
+//
+//                        }
+//
+//                        @Override
+//                        public void onError() {
+//                            Picasso.with(getApplicationContext()).load(dataSnapshot.child("image").getValue().toString()).into(jobImage);
+//                        }
+//                    });
 
-                        }
+                    Glide.with(SingleJobActiivity.this).load(dataSnapshot.child("image").getValue().toString())
+                            .thumbnail(0.5f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .error(R.mipmap.loading)
+                            .listener(new RequestListener<String, GlideDrawable>() {
+                                @Override
+                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                    jobImage.setVisibility(View.VISIBLE);
+                                    mProgressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
 
-                        @Override
-                        public void onError() {
-                            Picasso.with(getApplicationContext()).load(dataSnapshot.child("image").getValue().toString()).into(jobImage);
-                        }
-                    });
+                                @Override
+                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                    jobImage.setVisibility(View.VISIBLE);
+                                    mProgressBar.setVisibility(View.GONE);
+
+                                    return false;
+                                }
+                            })
+                            .crossFade()
+                            .into(jobImage);
 
 
                     mUsers.child(dataSnapshot.child("uid").getValue().toString()).addValueEventListener(new ValueEventListener() {
@@ -279,6 +303,8 @@ public class SingleJobActiivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         d = bidBtn.getBackground();
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_single_jobactivity);
+
     }
 
     private void checkIfBidded(){
