@@ -38,6 +38,7 @@ import com.example.toni.patakazi.Fragments.AccountFragment;
 import com.example.toni.patakazi.Fragments.JobsFragment;
 import com.example.toni.patakazi.Fragments.WorkersFragment;
 import com.example.toni.patakazi.Helpers.GpsTracker;
+import com.example.toni.patakazi.Helpers.SingleShotLocationProvider;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -94,7 +95,6 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
     private static int UPDATE_INTERVAL = 10000; // 10 sec
     private static int FATEST_INTERVAL = 5000; // 5 sec
     private static int DISPLACEMENT = 10; // 10 meters
-
     private double longitude;
     private double latitude;
 
@@ -128,46 +128,42 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
     private void location() {
 
         if (mAuth.getCurrentUser() != null) {
-            // create class object
-            GpsTracker gps = new GpsTracker(MainPanel.this);
 
-//                        // check if GPS enabled
-            if (gps.canGetLocation()) {
+            GpsTracker gpsTracker = new GpsTracker(MainPanel.this);
 
-                            double latitude1 = gps.getLatitude();
-                            double longitude1 = gps.getLongitude();
+            if (gpsTracker.canGetLocation()) {
 
-                            // \n is for new line
-                            // Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-                //displayLocation();
+                SingleShotLocationProvider.requestSingleUpdate(this,
+                        new SingleShotLocationProvider.LocationCallback() {
+                            @Override
+                            public void onNewLocationAvailable(SingleShotLocationProvider.GPSCoordinates location) {
+                                Log.d("Location", "my location is " + location.toString());
 
-                Geocoder geocoder;
-                List<Address> addresses;
-                geocoder = new Geocoder(MainPanel.this, Locale.getDefault());
 
-                try {
-                    addresses = geocoder.getFromLocation(latitude1, longitude1, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                    String city = addresses.get(0).getLocality();
-                    //  location.setText(city + "," + address);
+                                Geocoder geocoder;
+                                List<Address> addresses;
+                                geocoder = new Geocoder(MainPanel.this, Locale.getDefault());
 
-                    Toast.makeText(this, city + "," + address, Toast.LENGTH_SHORT).show();
+                                try {
 
-//                        String state = addresses.get(0).getAdminArea();
-//                        String country = addresses.get(0).getCountryName();
-//                        String postalCode = addresses.get(0).getPostalCode();
-//                        String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+                                    addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
+                                    String city = addresses.get(0).getAddressLine(0);
+                                    String address = addresses.get(0).getLocality();
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.d("sdsjnfdjknfsd", e.getMessage());
-                }
+                                    Toast.makeText(MainPanel.this, "Current location :" + city + ","+ address, Toast.LENGTH_SHORT).show();
+                                    Log.d("Location", "my location is " + city +","+ address);
 
-            } else {
-                // can't get location
-                // GPS or Network is not enabled
-                // Ask user to enable GPS/network in settings
-                gps.showSettingsAlert();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+
+            }else{
+
+                gpsTracker.showSettingsAlert();
+
             }
 
         }
