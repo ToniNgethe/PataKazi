@@ -169,7 +169,7 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
                                                 if (dataSnapshot.getValue().toString() != finalLocation) {
 
                                                     Log.d("Location", "Location changed");
-                                                    Toast.makeText(MainPanel.this, "Location changed to:" + finalLocation,Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(MainPanel.this, "Location changed to:" + finalLocation, Toast.LENGTH_SHORT).show();
                                                     dataSnapshot.getRef().setValue(finalLocation);
 
                                                 } else {
@@ -193,7 +193,7 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
 
                                         @Override
                                         public void onCancelled(DatabaseError databaseError) {
-                                            Log.d("Location",databaseError.getMessage());
+                                            Log.d("Location", databaseError.getMessage());
                                         }
                                     });
 

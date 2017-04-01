@@ -179,9 +179,11 @@ public class LoginActivity extends AppCompatActivity {
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
+
+                        googleProgress.dismiss();
+
                         if (!task.isSuccessful()) {
 
-                            googleProgress.dismiss();
                             Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
                         } else {
@@ -244,14 +246,13 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (!dataSnapshot.hasChild(userId)) {
 
-                        googleProgress.dismiss();
+
                         progressDialog.dismiss();
 
                         startActivity(new Intent(LoginActivity.this, SetupActivity.class));
                         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
                     } else {
 
-                        googleProgress.dismiss();
                         progressDialog.dismiss();
 
 
@@ -262,7 +263,7 @@ public class LoginActivity extends AppCompatActivity {
                         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         startActivity(launchNextActivity);
 
-                       // startActivity(new Intent(LoginActivity.this, MainPanel.class));
+                        // startActivity(new Intent(LoginActivity.this, MainPanel.class));
                         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
                     }
 
