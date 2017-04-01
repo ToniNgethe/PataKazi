@@ -1,5 +1,6 @@
 package com.example.toni.patakazi;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -99,6 +100,9 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
     private double latitude;
 
 
+    private ProgressDialog locProgress;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,20 +151,62 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
                                 try {
 
                                     addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
-                                    String city = addresses.get(0).getAddressLine(0);
-                                    String address = addresses.get(0).getLocality();
+                                    String address = addresses.get(0).getAddressLine(0);
+                                    String city = addresses.get(0).getLocality();
+                                    Log.d("Location", "my location is " + city + "," + address);
 
-                                    Toast.makeText(MainPanel.this, "Current location :" + city + ","+ address, Toast.LENGTH_SHORT).show();
-                                    Log.d("Location", "my location is " + city +","+ address);
+                                    final String finalLocation = city + "," + address;
+
+                                    //get database
+                                    DatabaseReference mUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("location");
+                                    mUsers.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            //check if it exists
+                                            if (dataSnapshot.exists()) {
+                                                //check if its same location
+                                                if (dataSnapshot.getValue().toString() != finalLocation) {
+
+                                                    Log.d("Location", "Location changed");
+                                                    Toast.makeText(MainPanel.this, "Location changed to:" + finalLocation,Toast.LENGTH_SHORT).show();
+                                                    dataSnapshot.getRef().setValue(finalLocation);
+
+                                                } else {
+
+                                                    Log.d("Location", "Same Location");
+                                                    Toast.makeText(MainPanel.this, "Current location :" + finalLocation, Toast.LENGTH_SHORT).show();
+                                                    Log.d("Location", "Same Location :" + dataSnapshot.getValue());
+
+                                                }
+
+                                            } else {
+
+                                                //location not found in database....so record it
+
+                                                Log.d("Location", "New Location recorded, firs time user");
+                                                Toast.makeText(MainPanel.this, "Current location :" + finalLocation, Toast.LENGTH_SHORT).show();
+                                                dataSnapshot.getRef().setValue(finalLocation);
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                            Log.d("Location",databaseError.getMessage());
+                                        }
+                                    });
 
                                 } catch (Exception e) {
                                     e.printStackTrace();
+
+
                                 }
 
                             }
                         });
 
-            }else{
+            } else {
 
                 gpsTracker.showSettingsAlert();
 
