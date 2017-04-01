@@ -7,6 +7,22 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
+    <ProgressBar
+        android:id="@+id/progressBar_jobFragment"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/tv_jobsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal|center"
+        android:padding="10dp"
+        android:text=":( No jobs found at your current location. Press + to get started"
+        android:textSize="18sp" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/jobs_rv"
         android:layout_width="match_parent"
@@ -16,5 +32,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
 
 </RelativeLayout>

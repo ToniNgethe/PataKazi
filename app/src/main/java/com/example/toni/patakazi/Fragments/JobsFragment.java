@@ -8,10 +8,10 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +34,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -43,22 +44,32 @@ import com.google.firebase.database.ValueEventListener;
 public class JobsFragment extends Fragment {
 
     private static final String SINGLE_POST = "jobiD";
+    private static final String TAG = JobsFragment.class.getSimpleName();
     private View myView;
     private RecyclerView rv;
 
     private DatabaseReference mJobs;
+    private DatabaseReference mUsers;
     private FirebaseAuth mAuth;
-    private SwipeRefreshLayout refres;
+    private String userLocation;
+
+    private TextView indicator;
+
+    Query query = null;
+
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         myView = inflater.inflate(R.layout.jobs_layout, container, false);
 
         //setupViews
         rv = (RecyclerView) myView.findViewById(R.id.jobs_rv);
-
+        indicator = (TextView) myView.findViewById(R.id.tv_jobsFragment);
+        indicator.setVisibility(View.GONE);
+        progressBar = (ProgressBar) myView.findViewById(R.id.progressBar_jobFragment);
 
         RecyclerView.LayoutManager lm = new GridLayoutManager(getActivity(), 2);
 
@@ -69,6 +80,8 @@ public class JobsFragment extends Fragment {
         //FIREBASE
         mAuth = FirebaseAuth.getInstance();
         mJobs = FirebaseDatabase.getInstance().getReference().child("Jobs");
+        mUsers = FirebaseDatabase.getInstance().getReference().child("Users");
+
         mJobs.keepSynced(true);
 
         return myView;
@@ -79,37 +92,88 @@ public class JobsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        //get user location
+        if (mAuth.getCurrentUser() != null) {
+            mUsers.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    //  Log.d(TAG, dataSnapshot.getValue().toString());
+
+                    if (dataSnapshot.child("location").exists()) {
+
+                        userLocation = dataSnapshot.child("location").getValue().toString();
+                        indicator.setVisibility(View.GONE);
+
+                        loadData(userLocation);
+
+                    } else {
+
+                        //  Toast.makeText(getActivity(),"From jobs : User "+ mAuth.getCurrentUser().getUid()+"not found", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "From jobs : User" + mAuth.getCurrentUser().getUid() + "not found");
+
+                        rv.setVisibility(View.GONE);
+                        indicator.setVisibility(View.GONE);
+                        indicator.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                    Log.d(TAG, databaseError.getMessage());
+
+                }
+            });
+        }
+    }
+
+    private void loadData(String userLocation) {
+
+
+        query = mJobs.orderByChild("location").equalTo(userLocation);
+
 
         FirebaseRecyclerAdapter<Jobs, JobsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Jobs, JobsViewHolder>(
 
                 Jobs.class,
                 R.layout.job_row,
                 JobsViewHolder.class,
-                mJobs
+                query
 
         ) {
             @Override
             protected void populateViewHolder(JobsViewHolder viewHolder, Jobs model, int position) {
 
-                final String jobID = getRef(position).getKey();
+                progressBar.setVisibility(View.GONE);
 
-                viewHolder.setImage(getActivity(), model.getImage());
-                viewHolder.setTitle(model.getTitle());
-                viewHolder.setCharge(model.getCharges());
+                if (model != null) {
 
-                viewHolder.checkJobIfClosed(jobID);
+                    indicator.setVisibility(View.GONE);
 
-                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                    final String jobID = getRef(position).getKey();
 
-                        Intent singlePost = new Intent(getActivity(), SingleJobActiivity.class);
-                        singlePost.putExtra("jobiD", jobID);
-                        startActivity(singlePost);
+                    viewHolder.setImage(getActivity(), model.getImage());
+                    viewHolder.setTitle(model.getTitle());
+                    viewHolder.setCharge(model.getCharges());
 
-                    }
-                });
+                    viewHolder.checkJobIfClosed(jobID);
 
+                    viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            Intent singlePost = new Intent(getActivity(), SingleJobActiivity.class);
+                            singlePost.putExtra("jobiD", jobID);
+                            startActivity(singlePost);
+
+                        }
+                    });
+                }else {
+
+                    indicator.setVisibility(View.VISIBLE);
+                    rv.setVisibility(View.GONE);
+                }
 
             }
         };

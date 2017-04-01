@@ -98,8 +98,7 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
     private static int DISPLACEMENT = 10; // 10 meters
     private double longitude;
     private double latitude;
-
-
+    private String finalLocation;
     private ProgressDialog locProgress;
 
 
@@ -155,7 +154,7 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
                                     String city = addresses.get(0).getLocality();
                                     Log.d("Location", "my location is " + city + "," + address);
 
-                                    final String finalLocation = city + "," + address;
+                                    finalLocation = city + "," + address;
 
                                     //get database
                                     DatabaseReference mUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("location");
@@ -169,13 +168,13 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
                                                 if (dataSnapshot.getValue().toString() != finalLocation) {
 
                                                     Log.d("Location", "Location changed");
-                                                    Toast.makeText(MainPanel.this, "Location changed to:" + finalLocation, Toast.LENGTH_SHORT).show();
+                                                   // Toast.makeText(MainPanel.this, "Location changed to:" + finalLocation, Toast.LENGTH_SHORT).show();
                                                     dataSnapshot.getRef().setValue(finalLocation);
 
                                                 } else {
 
                                                     Log.d("Location", "Same Location");
-                                                    Toast.makeText(MainPanel.this, "Current location :" + finalLocation, Toast.LENGTH_SHORT).show();
+                                                  //  Toast.makeText(MainPanel.this, "Current location :" + finalLocation, Toast.LENGTH_SHORT).show();
                                                     Log.d("Location", "Same Location :" + dataSnapshot.getValue());
 
                                                 }
@@ -185,9 +184,16 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
                                                 //location not found in database....so record it
 
                                                 Log.d("Location", "New Location recorded, firs time user");
-                                                Toast.makeText(MainPanel.this, "Current location :" + finalLocation, Toast.LENGTH_SHORT).show();
+                                             //   Toast.makeText(MainPanel.this, "Current location :" + finalLocation, Toast.LENGTH_SHORT).show();
                                                 dataSnapshot.getRef().setValue(finalLocation);
                                             }
+
+                                            JobsFragment jobsFragment = new JobsFragment();
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("LOCATION", finalLocation);
+
+                                            jobsFragment.setArguments(bundle);
+
 
                                         }
 
@@ -588,6 +594,12 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
             case 0:
 
                 JobsFragment jobsFragment = new JobsFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("LOCATION", finalLocation);
+
+                jobsFragment.setArguments(bundle);
+
                 return jobsFragment;
 
             case 1:
