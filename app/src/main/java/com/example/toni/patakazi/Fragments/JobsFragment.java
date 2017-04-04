@@ -1,12 +1,20 @@
 package com.example.toni.patakazi.Fragments;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,16 +27,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.toni.patakazi.Helpers.GpsTracker;
 import com.example.toni.patakazi.R;
 import com.example.toni.patakazi.SingleJobActiivity;
 import com.example.toni.patakazi.model.Jobs;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,11 +51,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 /**
  * Created by toni on 2/8/17.
  */
 
-public class JobsFragment extends Fragment {
+public class JobsFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final String SINGLE_POST = "jobiD";
     private static final String TAG = JobsFragment.class.getSimpleName();
@@ -51,25 +70,46 @@ public class JobsFragment extends Fragment {
     private DatabaseReference mJobs;
     private DatabaseReference mUsers;
     private FirebaseAuth mAuth;
-    private String userLocation;
-
     private TextView indicator;
 
-    Query query = null;
+    private Query query = null;
 
-    private ProgressBar progressBar;
+    private String loc;
+
+    private Location mLastLocation;
+
+    // Google client to interact with Google API
+    private GoogleApiClient mGoogleApiClient;
+
+    // boolean flag to toggle periodic location updates
+    private boolean mRequestingLocationUpdates = false;
+
+    private LocationRequest mLocationRequest;
+
+    // Location updates intervals in sec
+    private static int UPDATE_INTERVAL = 10000; // 10 sec
+    private static int FATEST_INTERVAL = 5000; // 5 sec
+    private static int DISPLACEMENT = 10; // 10 meters
+
+    private double longitude;
+    private double latitude;
+
+    private static final int MY_PERMISSIONS_FINE_LOCATION = 102;
+    private static final int MY_PERMISSIONS_COURSE_LOCATION = 103;
+
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        myView = inflater.inflate(R.layout.jobs_layout, container, false);
 
+        getLocation();
+
+        myView = inflater.inflate(R.layout.jobs_layout, container, false);
         //setupViews
         rv = (RecyclerView) myView.findViewById(R.id.jobs_rv);
         indicator = (TextView) myView.findViewById(R.id.tv_jobsFragment);
-        indicator.setVisibility(View.GONE);
-        progressBar = (ProgressBar) myView.findViewById(R.id.progressBar_jobFragment);
+
 
         RecyclerView.LayoutManager lm = new GridLayoutManager(getActivity(), 2);
 
@@ -91,48 +131,80 @@ public class JobsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        //get user location
-        if (mAuth.getCurrentUser() != null) {
-            mUsers.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    //  Log.d(TAG, dataSnapshot.getValue().toString());
-
-                    if (dataSnapshot.child("location").exists()) {
-
-                        userLocation = dataSnapshot.child("location").getValue().toString();
-                        indicator.setVisibility(View.GONE);
-
-                        loadData(userLocation);
-
-                    } else {
-
-                        //  Toast.makeText(getActivity(),"From jobs : User "+ mAuth.getCurrentUser().getUid()+"not found", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "From jobs : User" + mAuth.getCurrentUser().getUid() + "not found");
-
-                        rv.setVisibility(View.GONE);
-                        indicator.setVisibility(View.GONE);
-                        indicator.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                    Log.d(TAG, databaseError.getMessage());
-
-                }
-            });
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
         }
+        loadData();
     }
 
-    private void loadData(String userLocation) {
+    private void getLocation() {
+
+        // Building the GoogleApi client
+        buildGoogleApiClient();
+
+        createLocationRequest();
+
+        GpsTracker gps = new GpsTracker(getActivity());
+
+        if (gps.canGetLocation()) {
+           // displayLocation();
+
+            Geocoder geocoder;
+            List<Address> addresses;
+
+           // displayLocation();
+
+            geocoder = new Geocoder(getActivity(), Locale.getDefault());
+
+            try {
+                addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+               // address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                loc = addresses.get(0).getLocality();
+
+               // Log.d(TAG, String.valueOf(longitude) + " ," + String.valueOf(latitude));
+                Log.d(TAG, "CITY :" + loc);
+
+                Toast.makeText(getActivity(),"Current Location :" + loc,Toast.LENGTH_SHORT).show();
+
+            }catch (IOException e){
+
+                Log.d(TAG, e.getMessage());
+            }
 
 
-        query = mJobs.orderByChild("location").equalTo(userLocation);
+        } else {
+            gps.showSettingsAlert();
+        }
 
+
+    }
+
+
+    /**
+     * Creating location request object
+     */
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
+    }
+
+    /**
+     * Creating google api client object
+     */
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API).build();
+    }
+
+    private void loadData() {
+
+
+        query = mJobs.orderByChild("city").equalTo(loc);
 
         FirebaseRecyclerAdapter<Jobs, JobsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Jobs, JobsViewHolder>(
 
@@ -145,7 +217,7 @@ public class JobsFragment extends Fragment {
             @Override
             protected void populateViewHolder(JobsViewHolder viewHolder, Jobs model, int position) {
 
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
 
                 if (model != null) {
 
@@ -169,7 +241,7 @@ public class JobsFragment extends Fragment {
 
                         }
                     });
-                }else {
+                } else {
 
                     indicator.setVisibility(View.VISIBLE);
                     rv.setVisibility(View.GONE);
@@ -180,6 +252,136 @@ public class JobsFragment extends Fragment {
 
         rv.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.notifyDataSetChanged();
+
+    }
+
+    private void displayLocation() {
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            mLastLocation = LocationServices.FusedLocationApi
+                    .getLastLocation(mGoogleApiClient);
+
+            if (mLastLocation != null) {
+                latitude = mLastLocation.getLatitude();
+                longitude = mLastLocation.getLongitude();
+
+
+            } else {
+
+                Toast.makeText(getActivity(), "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
+            }
+
+        } else {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{
+                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                }, MY_PERMISSIONS_FINE_LOCATION);
+                requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                }, MY_PERMISSIONS_COURSE_LOCATION);
+            }
+
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Resuming the periodic location updates
+        if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
+            // startLocationUpdates();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case MY_PERMISSIONS_FINE_LOCATION:
+
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        mLastLocation = LocationServices.FusedLocationApi
+                                .getLastLocation(mGoogleApiClient);
+
+                        if (mLastLocation != null) {
+                            latitude = mLastLocation.getLatitude();
+                            longitude = mLastLocation.getLongitude();
+
+
+                        } else {
+
+                            Toast.makeText(getActivity(), "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                } else {
+
+                    Toast.makeText(getActivity(), "This app requires location permissions to be granted", Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
+                }
+
+                break;
+
+            case MY_PERMISSIONS_COURSE_LOCATION:
+
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        mLastLocation = LocationServices.FusedLocationApi
+                                .getLastLocation(mGoogleApiClient);
+
+                        if (mLastLocation != null) {
+
+                            latitude = mLastLocation.getLatitude();
+                            longitude = mLastLocation.getLongitude();
+
+
+                        } else {
+
+                            Toast.makeText(getActivity(), "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                } else {
+
+                    Toast.makeText(getActivity(), "This app requires location permissions to be granted", Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
+
+                }
+
+                break;
+
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 
@@ -248,15 +450,17 @@ public class JobsFragment extends Fragment {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    if (dataSnapshot.child("status").getValue().toString() == String.valueOf(1)) {
+                    if (dataSnapshot.exists()) {
 
-                        checkedOrNot.setImageResource(R.mipmap.ic_close_black_24dp);
+                        if (dataSnapshot.child("status").getValue().toString() == String.valueOf(1)) {
 
-                    } else {
+                            checkedOrNot.setImageResource(R.mipmap.ic_close_black_24dp);
 
-                        checkedOrNot.setImageResource(R.mipmap.chat_icon_grid);
+                        } else {
+
+                            checkedOrNot.setImageResource(R.mipmap.chat_icon_grid);
+                        }
                     }
-
                 }
 
                 @Override

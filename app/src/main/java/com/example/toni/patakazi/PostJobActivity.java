@@ -96,6 +96,8 @@ public class PostJobActivity extends AppCompatActivity implements GoogleApiClien
     private double longitude;
     private double latitude;
 
+    private String city, address;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +118,7 @@ public class PostJobActivity extends AppCompatActivity implements GoogleApiClien
         getJobPicture();
         getLocation();
         submitJob();
+
 
     }
 
@@ -190,8 +193,8 @@ public class PostJobActivity extends AppCompatActivity implements GoogleApiClien
 
                             try {
                                 addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                                String city = addresses.get(0).getLocality();
+                                 address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                                 city = addresses.get(0).getLocality();
                                 location.setText(city + "," + address);
 
 //                        String state = addresses.get(0).getAdminArea();
@@ -258,6 +261,7 @@ public class PostJobActivity extends AppCompatActivity implements GoogleApiClien
                                         jobs.child("desc").setValue(desc.getText().toString());
                                         jobs.child("charges").setValue(Integer.parseInt(charges.getText().toString()));
                                         jobs.child("location").setValue(location.getText().toString());
+                                        jobs.child("city").setValue(city);
                                         jobs.child("date").setValue(getDate());
                                         jobs.child("image").setValue(taskSnapshot.getDownloadUrl().toString());
                                         jobs.child("uid").setValue(mAuth.getCurrentUser().getUid().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {

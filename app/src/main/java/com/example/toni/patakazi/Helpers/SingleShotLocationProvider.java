@@ -14,7 +14,7 @@ import android.os.Bundle;
 public class SingleShotLocationProvider {
 
     public static interface LocationCallback {
-        public void onNewLocationAvailable(GPSCoordinates location);
+        public void onNewLocationAvailable(Location location);
     }
 
     // calls back to calling thread, note this is for low grain: if you want higher precision, swap the
@@ -35,7 +35,7 @@ public class SingleShotLocationProvider {
                 @Override
                 public void onLocationChanged(Location location) {
 
-                    callback.onNewLocationAvailable(new GPSCoordinates(location.getLatitude(), location.getLongitude()));
+                    callback.onNewLocationAvailable(location);
                 }
 
                 @Override
@@ -67,7 +67,7 @@ public class SingleShotLocationProvider {
                 locationManager.requestSingleUpdate(criteria, new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
-                        callback.onNewLocationAvailable(new GPSCoordinates(location.getLatitude(), location.getLongitude()));
+                        callback.onNewLocationAvailable(location);
                     }
 
                     @Override

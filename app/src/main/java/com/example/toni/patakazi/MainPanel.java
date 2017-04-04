@@ -1,19 +1,14 @@
 package com.example.toni.patakazi;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -38,13 +33,9 @@ import com.example.toni.patakazi.Dialogs.AddChoiceDialog;
 import com.example.toni.patakazi.Fragments.AccountFragment;
 import com.example.toni.patakazi.Fragments.JobsFragment;
 import com.example.toni.patakazi.Fragments.WorkersFragment;
-import com.example.toni.patakazi.Helpers.GpsTracker;
-import com.example.toni.patakazi.Helpers.SingleShotLocationProvider;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,11 +45,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
-import java.util.List;
-import java.util.Locale;
-
-public class MainPanel extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class MainPanel extends AppCompatActivity {
 
     private static final String TAG = MainPanel.class.getSimpleName();
     private static final int MY_PERMISSIONS_FINE_LOCATION = 100;
@@ -82,41 +69,22 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
-    private Location mLastLocation;
-
-    // Google client to interact with Google API
-    private GoogleApiClient mGoogleApiClient;
-
-    // boolean flag to toggle periodic location updates
-    private boolean mRequestingLocationUpdates = false;
 
     private LocationRequest mLocationRequest;
-
-    // Location updates intervals in sec
-    private static int UPDATE_INTERVAL = 10000; // 10 sec
-    private static int FATEST_INTERVAL = 5000; // 5 sec
-    private static int DISPLACEMENT = 10; // 10 meters
-    private double longitude;
-    private double latitude;
-    private String finalLocation;
-    private ProgressDialog locProgress;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overall);
-        buildGoogleApiClient();
-        createLocationRequest();
+//        buildGoogleApiClient();
+//        createLocationRequest();
 
+        displayLocation();
         initiLizeFirebase();
-        location();
         checkUsre();
         setUpViews();
-
         // load nav menu header data
         loadNavHeader();
-
         // initializing navigation menu
         setUpNavigationView();
         initiateTabListener();
@@ -128,119 +96,93 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
 
     }
 
-    private void location() {
+//    private void location() {
+//
+//        if (mAuth.getCurrentUser() != null) {
+//
+//            GpsTracker gpsTracker = new GpsTracker(MainPanel.this);
+//
+//            if (gpsTracker.canGetLocation()) {
+//
+//                SingleShotLocationProvider.requestSingleUpdate(this,
+//                        new SingleShotLocationProvider.LocationCallback() {
+//                            @Override
+//                            public void onNewLocationAvailable(SingleShotLocationProvider.GPSCoordinates location) {
+//                                Log.d("Location", "my location is " + location.toString());
+//
+//
+//                                Geocoder geocoder;
+//                                List<Address> addresses;
+//                                geocoder = new Geocoder(MainPanel.this, Locale.getDefault());
+//
+//                                try {
+//
+//                                    addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
+//                                    String address = addresses.get(0).getAddressLine(0);
+//                                    final String city = addresses.get(0).getLocality();
+//                                    Log.d("Location", "my location is " + city + "," + address);
+//
+//                                    finalLocation = city + "," + address;
+//
+//                                    //get database
+//                                    DatabaseReference mUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("city");
+//                                    mUsers.addValueEventListener(new ValueEventListener() {
+//                                        @Override
+//                                        public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                                            //check if it exists
+//                                            if (dataSnapshot.exists()) {
+//                                                //check if its same location
+//                                                if (dataSnapshot.getValue().toString() != city) {
+//
+//                                                    Log.d("Location", "Location changed");
+//                                                    Toast.makeText(MainPanel.this, "Location changed to:" + finalLocation, Toast.LENGTH_SHORT).show();
+//                                                    dataSnapshot.getRef().setValue(city);
+//
+//                                                } else {
+//
+//                                                    Log.d("Location", "Same Location");
+//                                                    Toast.makeText(MainPanel.this, "Current location :" + finalLocation, Toast.LENGTH_SHORT).show();
+//                                                    Log.d("Location", "Same Location :" + dataSnapshot.getValue());
+//
+//                                                }
+//
+//                                            } else {
+//
+//                                                //location not found in database....so record it
+//
+//                                                Log.d("Location", "New Location recorded, firs time user");
+//                                                Toast.makeText(MainPanel.this, "Current location :" + finalLocation, Toast.LENGTH_SHORT).show();
+//                                                dataSnapshot.getRef().setValue(city);
+//                                            }
+//
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onCancelled(DatabaseError databaseError) {
+//                                            Log.d("Location", databaseError.getMessage());
+//                                        }
+//                                    });
+//
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                    Log.d(TAG, e.getMessage());
+//
+//                                }
+//
+//                            }
+//                        });
+//
+//            } else {
+//
+//                gpsTracker.showSettingsAlert();
+//
+//            }
+//
+//        }
+//    }
 
-        if (mAuth.getCurrentUser() != null) {
-
-            GpsTracker gpsTracker = new GpsTracker(MainPanel.this);
-
-            if (gpsTracker.canGetLocation()) {
-
-                SingleShotLocationProvider.requestSingleUpdate(this,
-                        new SingleShotLocationProvider.LocationCallback() {
-                            @Override
-                            public void onNewLocationAvailable(SingleShotLocationProvider.GPSCoordinates location) {
-                                Log.d("Location", "my location is " + location.toString());
-
-
-                                Geocoder geocoder;
-                                List<Address> addresses;
-                                geocoder = new Geocoder(MainPanel.this, Locale.getDefault());
-
-                                try {
-
-                                    addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
-                                    String address = addresses.get(0).getAddressLine(0);
-                                    String city = addresses.get(0).getLocality();
-                                    Log.d("Location", "my location is " + city + "," + address);
-
-                                    finalLocation = city + "," + address;
-
-                                    //get database
-                                    DatabaseReference mUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("location");
-                                    mUsers.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                            //check if it exists
-                                            if (dataSnapshot.exists()) {
-                                                //check if its same location
-                                                if (dataSnapshot.getValue().toString() != finalLocation) {
-
-                                                    Log.d("Location", "Location changed");
-                                                   // Toast.makeText(MainPanel.this, "Location changed to:" + finalLocation, Toast.LENGTH_SHORT).show();
-                                                    dataSnapshot.getRef().setValue(finalLocation);
-
-                                                } else {
-
-                                                    Log.d("Location", "Same Location");
-                                                  //  Toast.makeText(MainPanel.this, "Current location :" + finalLocation, Toast.LENGTH_SHORT).show();
-                                                    Log.d("Location", "Same Location :" + dataSnapshot.getValue());
-
-                                                }
-
-                                            } else {
-
-                                                //location not found in database....so record it
-
-                                                Log.d("Location", "New Location recorded, firs time user");
-                                             //   Toast.makeText(MainPanel.this, "Current location :" + finalLocation, Toast.LENGTH_SHORT).show();
-                                                dataSnapshot.getRef().setValue(finalLocation);
-                                            }
-
-                                            JobsFragment jobsFragment = new JobsFragment();
-                                            Bundle bundle = new Bundle();
-                                            bundle.putString("LOCATION", finalLocation);
-
-                                            jobsFragment.setArguments(bundle);
-
-
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-                                            Log.d("Location", databaseError.getMessage());
-                                        }
-                                    });
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-
-
-                                }
-
-                            }
-                        });
-
-            } else {
-
-                gpsTracker.showSettingsAlert();
-
-            }
-
-        }
-    }
-
-    /**
-     * Creating location request object
-     */
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
-    }
-
-    /**
-     * Creating google api client object
-     */
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API).build();
-    }
 
     /**
      * Method to verify google play services on the device
@@ -545,9 +487,7 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
+        checkPlayServices();
 
     }
 
@@ -559,9 +499,6 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
             mAuth.removeAuthStateListener(mAuthListener);
         }
 
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
     }
 
     private void loadHomeFragment() {
@@ -594,12 +531,6 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
             case 0:
 
                 JobsFragment jobsFragment = new JobsFragment();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("LOCATION", finalLocation);
-
-                jobsFragment.setArguments(bundle);
-
                 return jobsFragment;
 
             case 1:
@@ -634,10 +565,6 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
 
         checkPlayServices();
 
-        // Resuming the periodic location updates
-        if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
-            // startLocationUpdates();
-        }
     }
 
     /**
@@ -647,18 +574,16 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            mLastLocation = LocationServices.FusedLocationApi
-                    .getLastLocation(mGoogleApiClient);
+//            mLastLocation = LocationServices.FusedLocationApi
+//                    .getLastLocation(mGoogleApiClient);
+//
+//            if (mLastLocation != null) {
+//                latitude = mLastLocation.getLatitude();
+//                longitude = mLastLocation.getLongitude();
 
-            if (mLastLocation != null) {
-                latitude = mLastLocation.getLatitude();
-                longitude = mLastLocation.getLongitude();
 
+            Log.d(TAG, "Location services allowed");
 
-            } else {
-
-                Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
-            }
 
         } else {
 
@@ -684,20 +609,22 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
 
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        mLastLocation = LocationServices.FusedLocationApi
-                                .getLastLocation(mGoogleApiClient);
+                    Log.d(TAG, "Permission requested was a success");
 
-                        if (mLastLocation != null) {
-                            latitude = mLastLocation.getLatitude();
-                            longitude = mLastLocation.getLongitude();
-
-
-                        } else {
-
-                            Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
-                        }
-                    }
+//                    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//                        mLastLocation = LocationServices.FusedLocationApi
+//                                .getLastLocation(mGoogleApiClient);
+//
+//                        if (mLastLocation != null) {
+//                            latitude = mLastLocation.getLatitude();
+//                            longitude = mLastLocation.getLongitude();
+//
+//
+//                        } else {
+//
+//                            Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
 
                 } else {
 
@@ -712,21 +639,23 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
 
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        mLastLocation = LocationServices.FusedLocationApi
-                                .getLastLocation(mGoogleApiClient);
 
-                        if (mLastLocation != null) {
-
-                            latitude = mLastLocation.getLatitude();
-                            longitude = mLastLocation.getLongitude();
-
-
-                        } else {
-
-                            Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
-                        }
-                    }
+                    Log.d(TAG, "Permission requested was a success");
+//                    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//                        mLastLocation = LocationServices.FusedLocationApi
+//                                .getLastLocation(mGoogleApiClient);
+//
+//                        if (mLastLocation != null) {
+//
+//                            latitude = mLastLocation.getLatitude();
+//                            longitude = mLastLocation.getLongitude();
+//
+//
+//                        } else {
+//
+//                            Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
 
                 } else {
 
@@ -740,23 +669,4 @@ public class MainPanel extends AppCompatActivity implements GoogleApiClient.Conn
         }
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        // Once connected with google api, get the location
-        displayLocation();
-
-//        if (mRequestingLocationUpdates) {
-//            startLocationUpdates();
-//        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 }

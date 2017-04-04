@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ public class SingleWorkerActivity extends AppCompatActivity {
 
     private static final int PERMISSION_SEND_SMS = 100;
     private static final int PERMISSION_CALL = 101;
+    private static final String TAG = SingleWorkerActivity.class.getSimpleName();
     private ImageView workerImage;
     private ProgressBar mProgressBar;
     private TextView name, charges, location;
@@ -84,6 +86,7 @@ public class SingleWorkerActivity extends AppCompatActivity {
                             openCallAndMessage(v);
 
                         } else {
+
                             Toast.makeText(SingleWorkerActivity.this, "User has not attached his/her number", Toast.LENGTH_SHORT).show();
                         }
 
@@ -92,6 +95,10 @@ public class SingleWorkerActivity extends AppCompatActivity {
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
+                        if (databaseError != null){
+                            Log.d(TAG, databaseError.getMessage());
+                            Toast.makeText(SingleWorkerActivity.this,databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
@@ -212,7 +219,7 @@ public class SingleWorkerActivity extends AppCompatActivity {
                                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                                         workerImage.setVisibility(View.VISIBLE);
                                         mProgressBar.setVisibility(View.GONE);
-
+                                        
                                         return false;
                                     }
                                 })
