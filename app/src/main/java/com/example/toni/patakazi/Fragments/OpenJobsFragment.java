@@ -13,10 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.toni.patakazi.BiddedJobActivity;
 import com.example.toni.patakazi.LoginActivity;
 import com.example.toni.patakazi.R;
@@ -38,7 +42,6 @@ public class OpenJobsFragment extends Fragment {
 
     private View mView;
     private RecyclerView mRecyclerView;
-
     private FirebaseAuth mAuth;
     private DatabaseReference mJobs;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -113,37 +116,40 @@ public class OpenJobsFragment extends Fragment {
             @Override
             protected void populateViewHolder(final PostedJobViewHolder viewHolder, final Jobs model, int position) {
 
-                final String jobID = getRef(position).getKey();
+                    mRecyclerView.setVisibility(View.VISIBLE);
 
-                viewHolder.setTitle(model.getTitle());
-                viewHolder.setPicture(getActivity(), model.getImage());
-                viewHolder.setDate(model.getDate());
-                viewHolder.viewBidders.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                    final String jobID = getRef(position).getKey();
 
-                        Intent intent = new Intent(getActivity(), BiddedJobActivity.class);
-                        intent.putExtra("jobID", jobID);
-                        startActivity(intent);
+                    viewHolder.setTitle(model.getTitle());
+                    viewHolder.setPicture(getActivity(), model.getImage());
+                    viewHolder.setDate(model.getDate());
+                    viewHolder.setLocation(model.getLocation());
+                    viewHolder.viewBidders.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
-                    }
-                });
+                            Intent intent = new Intent(getActivity(), BiddedJobActivity.class);
+                            intent.putExtra("jobID", jobID);
+                            startActivity(intent);
 
-                DatabaseReference db = mBids.child(jobID);
+                        }
+                    });
 
-                db.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    DatabaseReference db = mBids.child(jobID);
 
-                        viewHolder.setNumber(dataSnapshot.getChildrenCount());
+                    db.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    }
+                            viewHolder.setNumber(dataSnapshot.getChildrenCount());
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
 
             }
@@ -157,7 +163,9 @@ public class OpenJobsFragment extends Fragment {
     public static class PostedJobViewHolder extends RecyclerView.ViewHolder {
 
         public View mView;
+        private ProgressBar mProgressBar;
         public Button viewBidders;
+        private ImageView imageView;
 
         private DatabaseReference mBids;
 
@@ -169,6 +177,9 @@ public class OpenJobsFragment extends Fragment {
             mBids = FirebaseDatabase.getInstance().getReference().child("Bids");
             mBids.keepSynced(true);
 
+            imageView = (ImageView) mView.findViewById(R.id.myJobImage);
+            imageView.setVisibility(View.INVISIBLE);
+            mProgressBar = (ProgressBar) mView.findViewById(R.id.progressBar_myjobs);
             viewBidders = (Button) mView.findViewById(R.id.myJobViewBids);
         }
 
@@ -187,14 +198,37 @@ public class OpenJobsFragment extends Fragment {
 
         }
 
+        public void setLocation(String location){
+            TextView textView = (TextView) mView.findViewById(R.id.myJobLocationPosted);
+            textView.setText(location);
+        }
+
         public void setPicture(Context ctx, String url){
 
-            ImageView imageView = (ImageView) mView.findViewById(R.id.myJobImage);
             Glide.with(ctx).load(url)
                     .thumbnail(0.5f)
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .error(R.mipmap.loading)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+
+                            imageView.setVisibility(View.VISIBLE);
+                            mProgressBar.setVisibility(View.GONE);
+
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+
+                            imageView.setVisibility(View.VISIBLE);
+                            mProgressBar.setVisibility(View.GONE);
+
+                            return false;
+                        }
+                    })
+                    .error(R.mipmap.error_network)
                     .into(imageView);
 
         }

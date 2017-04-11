@@ -23,11 +23,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.toni.patakazi.Dialogs.ChangeEmailAddress;
 import com.example.toni.patakazi.Dialogs.ChangePhoneNumber;
 import com.example.toni.patakazi.Dialogs.ChangeUserNameDialog;
@@ -80,6 +84,7 @@ public class AccountFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
 
     private Uri imageUri = null;
+    private ProgressBar mProgressBar;
 
 
     @Nullable
@@ -442,7 +447,26 @@ public class AccountFragment extends Fragment {
                                     .crossFade()
                                     .thumbnail(0.5f)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .error(R.mipmap.loading)
+                                    .error(R.mipmap.error_network)
+                                    .listener(new RequestListener<String, GlideDrawable>() {
+                                        @Override
+                                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+
+                                            mProgressBar.setVisibility(View.GONE);
+                                            profile.setVisibility(View.VISIBLE);
+
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+
+                                            mProgressBar.setVisibility(View.GONE);
+                                            profile.setVisibility(View.VISIBLE);
+
+                                            return false;
+                                        }
+                                    })
                                     .into(profile);
 
                             //username
@@ -491,12 +515,15 @@ public class AccountFragment extends Fragment {
 
     private void setUpViews(View mView) {
 
+        mProgressBar = (ProgressBar) mView.findViewById(R.id.progress_userprofile);
+
         phoneNumber = (TextView) mView.findViewById(R.id.userPhoneNumber);
         email = (TextView) mView.findViewById(R.id.userEmail);
         location = (TextView) mView.findViewById(R.id.userLocation);
         userName = (TextView) mView.findViewById(R.id.accountName);
 
         profile = (ImageView) mView.findViewById(R.id.accountProfile44);
+        profile.setVisibility(View.INVISIBLE);
 
         changeEmail = (ImageButton) mView.findViewById(R.id.changeEmail);
         changeLocation = (ImageButton) mView.findViewById(R.id.changeUserLocation);

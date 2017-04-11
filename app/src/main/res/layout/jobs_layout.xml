@@ -16,6 +16,12 @@
         android:text=":( No jobs found at your current location. Press + to get started"
         android:textSize="18sp" />
 
+    <ImageView
+        android:id="@+id/iv_jobs_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srcCompat="@mipmap/error_network" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/jobs_rv"
         android:layout_width="match_parent"

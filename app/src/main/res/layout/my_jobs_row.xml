@@ -97,7 +97,29 @@
 
                     </TableRow>
 
+                    <TableRow
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
 
+
+                        <TextView
+                            android:text="Location"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView17"
+                            android:paddingLeft="3dp" />
+
+                        <TextView
+                            android:text="TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:id="@+id/myJobLocationPosted"
+                            android:textStyle="normal|bold" />
+
+                    </TableRow>
 
                     <TableRow
                         android:paddingBottom="5dp"
@@ -168,5 +190,12 @@
         </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar_myjobs"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp" />
 
 </RelativeLayout>

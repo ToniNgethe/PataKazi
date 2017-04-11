@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.toni.patakazi.Helpers.Global;
 import com.example.toni.patakazi.Helpers.SingleShotLocationProvider;
 import com.example.toni.patakazi.R;
 import com.example.toni.patakazi.SingleWorkerActivity;
@@ -58,31 +59,42 @@ public class WorkersFragment extends Fragment {
     private String loc;
     private Query query;
 
+    private ImageView network;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        getLocation();
         mView = inflater.inflate(R.layout.workers_fragment, container, false);
+
         //views
         linearLayout = (LinearLayout) mView.findViewById(R.id.holder_workersFragment);
         more = (Button) mView.findViewById(R.id.button_workersFragment);
         linearLayout.setVisibility(View.GONE);
+        network = (ImageView) mView.findViewById(R.id.iv_workersFragment_net);
         //setting up recycleview
         mRecycleView = (RecyclerView) mView.findViewById(R.id.workersRecycleView);
         RecyclerView.LayoutManager lm = new GridLayoutManager(getActivity(), 2);
 
-        mRecycleView.setLayoutManager(lm);
-        mRecycleView.addItemDecoration(new WorkersFragment.GridSpacingItemDecoration(3, dpToPx(6), true));
-        mRecycleView.setItemAnimator(new DefaultItemAnimator());
+        if (Global.isConnected(getActivity())) {
+            network.setVisibility(View.GONE);
+            getLocation();
 
-        //setting up firebase
-        mAuth = FirebaseAuth.getInstance();
-        mSkills = FirebaseDatabase.getInstance().getReference().child("Skills");
+            mRecycleView.setLayoutManager(lm);
+            mRecycleView.addItemDecoration(new WorkersFragment.GridSpacingItemDecoration(3, dpToPx(6), true));
+            mRecycleView.setItemAnimator(new DefaultItemAnimator());
 
-        //queery
-        query = mSkills.orderByChild("city").equalTo(loc);
+            //setting up firebase
+            mAuth = FirebaseAuth.getInstance();
+            mSkills = FirebaseDatabase.getInstance().getReference().child("Skills");
+
+        } else {
+
+            linearLayout.setVisibility(View.GONE);
+            mRecycleView.setVisibility(View.GONE);
+
+        }
 
         return mView;
     }
@@ -95,7 +107,7 @@ public class WorkersFragment extends Fragment {
 
                 Geocoder geocoder;
                 List<Address> addresses;
-                geocoder = new Geocoder(getContext(), Locale.getDefault());
+                geocoder = new Geocoder(getActivity(), Locale.getDefault());
 
                 try {
                     addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
@@ -103,9 +115,9 @@ public class WorkersFragment extends Fragment {
 
                     loc = addresses.get(0).getLocality();
 
-                    Log.d (TAG,addresses.get(0).getLocality());
+                    Log.d(TAG, addresses.get(0).getLocality());
 
-                }catch (IOException e){
+                } catch (IOException e) {
 
                     e.printStackTrace();
                     Log.d(TAG, e.getMessage());
@@ -120,51 +132,56 @@ public class WorkersFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        if (Global.isConnected(getActivity())) {
 
-        FirebaseRecyclerAdapter<Skills, WorkersFragmentViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Skills, WorkersFragmentViewHolder>(
+            //queery
+            query = mSkills.orderByChild("city").equalTo(loc);
 
-                Skills.class,
-                R.layout.workers_fragment_row,
-                WorkersFragmentViewHolder.class,
-                query
+            FirebaseRecyclerAdapter<Skills, WorkersFragmentViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Skills, WorkersFragmentViewHolder>(
 
-        ) {
-            @Override
-            protected void populateViewHolder(WorkersFragmentViewHolder viewHolder, Skills model, int position) {
+                    Skills.class,
+                    R.layout.workers_fragment_row,
+                    WorkersFragmentViewHolder.class,
+                    query
+
+            ) {
+                @Override
+                protected void populateViewHolder(WorkersFragmentViewHolder viewHolder, Skills model, int position) {
 
 
-                if (model != null) {
-                    
-                    linearLayout.setVisibility(View.GONE);
+                    if (model != null) {
 
-                    final String skillKey = getRef(position).getKey();
+                        linearLayout.setVisibility(View.GONE);
 
-                    viewHolder.setWorkerImage(getActivity(), model.getImage());
-                    viewHolder.setWorkerTitle(model.getTitle());
-                    viewHolder.setWorkerLocation(model.getLocation());
-                    viewHolder.setPrice(model.getCharges());
+                        final String skillKey = getRef(position).getKey();
 
-                    viewHolder.mView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                        viewHolder.setWorkerImage(getActivity(), model.getImage());
+                        viewHolder.setWorkerTitle(model.getTitle());
+                        viewHolder.setWorkerLocation(model.getLocation());
+                        viewHolder.setPrice(model.getCharges());
 
-                            Intent skillSingleView = new Intent(getActivity(), SingleWorkerActivity.class);
-                            skillSingleView.putExtra(SKILL_KEY, skillKey);
-                            startActivity(skillSingleView);
+                        viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                        }
-                    });
-                }else {
+                                Intent skillSingleView = new Intent(getActivity(), SingleWorkerActivity.class);
+                                skillSingleView.putExtra(SKILL_KEY, skillKey);
+                                startActivity(skillSingleView);
 
-                    mRecycleView.setVisibility(View.GONE);
-                    linearLayout.setVisibility(View.VISIBLE);
-                    
+                            }
+                        });
+                    } else {
+
+                        mRecycleView.setVisibility(View.GONE);
+                        linearLayout.setVisibility(View.VISIBLE);
+
+                    }
                 }
-            }
-        };
+            };
 
-        mRecycleView.setAdapter(firebaseRecyclerAdapter);
-        firebaseRecyclerAdapter.notifyDataSetChanged();
+            mRecycleView.setAdapter(firebaseRecyclerAdapter);
+            firebaseRecyclerAdapter.notifyDataSetChanged();
+        }
     }
 
     public static class WorkersFragmentViewHolder extends RecyclerView.ViewHolder {

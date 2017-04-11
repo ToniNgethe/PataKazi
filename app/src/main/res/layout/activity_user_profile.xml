@@ -10,6 +10,14 @@
         android:layout_height="wrap_content"
      >
 
+        <ProgressBar
+            android:id="@+id/progress_userprofile"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/chooseNewImage"
+            android:layout_centerHorizontal="true" />
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/accountProfile44"
             android:src="@mipmap/profile"

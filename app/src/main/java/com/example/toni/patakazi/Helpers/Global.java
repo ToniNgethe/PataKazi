@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
 
 import com.example.toni.patakazi.R;
@@ -46,5 +48,22 @@ public class Global {
         Point size = new Point();
         activity.getWindowManager().getDefaultDisplay().getSize(size);
         return size.x;
+    }
+
+    //check connection...
+    public static boolean isConnected(Context context){
+
+        boolean connected = false;
+
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        if (activeNetwork != null && activeNetwork.isConnected()){
+            connected = true;
+        }
+
+        return connected;
     }
 }

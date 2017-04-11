@@ -34,6 +34,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.toni.patakazi.Helpers.Global;
 import com.example.toni.patakazi.Helpers.GpsTracker;
 import com.example.toni.patakazi.R;
 import com.example.toni.patakazi.SingleJobActiivity;
@@ -78,6 +79,8 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
 
     private Location mLastLocation;
 
+    private ImageView network_indicator;
+
     // Google client to interact with Google API
     private GoogleApiClient mGoogleApiClient;
 
@@ -102,27 +105,38 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
-        getLocation();
-
         myView = inflater.inflate(R.layout.jobs_layout, container, false);
+
         //setupViews
+        network_indicator = (ImageView) myView.findViewById(R.id.iv_jobs_indicator);
         rv = (RecyclerView) myView.findViewById(R.id.jobs_rv);
         indicator = (TextView) myView.findViewById(R.id.tv_jobsFragment);
+        // Building the GoogleApi client
+        buildGoogleApiClient();
 
+        if (Global.isConnected(getActivity())) {
+            displayLocation();
+            network_indicator.setVisibility(View.GONE);
 
-        RecyclerView.LayoutManager lm = new GridLayoutManager(getActivity(), 2);
+            getLocation();
+            RecyclerView.LayoutManager lm = new GridLayoutManager(getActivity(), 2);
 
-        rv.setLayoutManager(lm);
-        rv.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(6), true));
-        rv.setItemAnimator(new DefaultItemAnimator());
+            rv.setLayoutManager(lm);
+            rv.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(6), true));
+            rv.setItemAnimator(new DefaultItemAnimator());
 
-        //FIREBASE
-        mAuth = FirebaseAuth.getInstance();
-        mJobs = FirebaseDatabase.getInstance().getReference().child("Jobs");
-        mUsers = FirebaseDatabase.getInstance().getReference().child("Users");
+            //FIREBASE
+            mAuth = FirebaseAuth.getInstance();
+            mJobs = FirebaseDatabase.getInstance().getReference().child("Jobs");
+            mUsers = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        mJobs.keepSynced(true);
+            mJobs.keepSynced(true);
+        }else {
+
+            rv.setVisibility(View.GONE);
+            indicator.setVisibility(View.GONE);
+
+        }
 
         return myView;
     }
@@ -134,13 +148,13 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-        loadData();
+
+        if (Global.isConnected(getActivity())) {
+            loadData();
+        }
     }
 
     private void getLocation() {
-
-        // Building the GoogleApi client
-        buildGoogleApiClient();
 
         createLocationRequest();
 
@@ -176,9 +190,7 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
             gps.showSettingsAlert();
         }
 
-
     }
-
 
     /**
      * Creating location request object
@@ -261,19 +273,6 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
                 PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            mLastLocation = LocationServices.FusedLocationApi
-                    .getLastLocation(mGoogleApiClient);
-
-            if (mLastLocation != null) {
-                latitude = mLastLocation.getLatitude();
-                longitude = mLastLocation.getLongitude();
-
-
-            } else {
-
-                Toast.makeText(getActivity(), "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
-            }
-
         } else {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -315,20 +314,6 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
 
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        mLastLocation = LocationServices.FusedLocationApi
-                                .getLastLocation(mGoogleApiClient);
-
-                        if (mLastLocation != null) {
-                            latitude = mLastLocation.getLatitude();
-                            longitude = mLastLocation.getLongitude();
-
-
-                        } else {
-
-                            Toast.makeText(getActivity(), "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
-                        }
-                    }
 
                 } else {
 
@@ -341,22 +326,6 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
             case MY_PERMISSIONS_COURSE_LOCATION:
 
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        mLastLocation = LocationServices.FusedLocationApi
-                                .getLastLocation(mGoogleApiClient);
-
-                        if (mLastLocation != null) {
-
-                            latitude = mLastLocation.getLatitude();
-                            longitude = mLastLocation.getLongitude();
-
-
-                        } else {
-
-                            Toast.makeText(getActivity(), "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_LONG).show();
-                        }
-                    }
 
                 } else {
 

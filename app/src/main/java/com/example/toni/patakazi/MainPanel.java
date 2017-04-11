@@ -66,7 +66,6 @@ public class MainPanel extends AppCompatActivity {
     private Handler mHandler;
     private Boolean exit = false;
 
-
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
 
@@ -95,93 +94,6 @@ public class MainPanel extends AppCompatActivity {
         }
 
     }
-
-//    private void location() {
-//
-//        if (mAuth.getCurrentUser() != null) {
-//
-//            GpsTracker gpsTracker = new GpsTracker(MainPanel.this);
-//
-//            if (gpsTracker.canGetLocation()) {
-//
-//                SingleShotLocationProvider.requestSingleUpdate(this,
-//                        new SingleShotLocationProvider.LocationCallback() {
-//                            @Override
-//                            public void onNewLocationAvailable(SingleShotLocationProvider.GPSCoordinates location) {
-//                                Log.d("Location", "my location is " + location.toString());
-//
-//
-//                                Geocoder geocoder;
-//                                List<Address> addresses;
-//                                geocoder = new Geocoder(MainPanel.this, Locale.getDefault());
-//
-//                                try {
-//
-//                                    addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
-//                                    String address = addresses.get(0).getAddressLine(0);
-//                                    final String city = addresses.get(0).getLocality();
-//                                    Log.d("Location", "my location is " + city + "," + address);
-//
-//                                    finalLocation = city + "," + address;
-//
-//                                    //get database
-//                                    DatabaseReference mUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("city");
-//                                    mUsers.addValueEventListener(new ValueEventListener() {
-//                                        @Override
-//                                        public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                                            //check if it exists
-//                                            if (dataSnapshot.exists()) {
-//                                                //check if its same location
-//                                                if (dataSnapshot.getValue().toString() != city) {
-//
-//                                                    Log.d("Location", "Location changed");
-//                                                    Toast.makeText(MainPanel.this, "Location changed to:" + finalLocation, Toast.LENGTH_SHORT).show();
-//                                                    dataSnapshot.getRef().setValue(city);
-//
-//                                                } else {
-//
-//                                                    Log.d("Location", "Same Location");
-//                                                    Toast.makeText(MainPanel.this, "Current location :" + finalLocation, Toast.LENGTH_SHORT).show();
-//                                                    Log.d("Location", "Same Location :" + dataSnapshot.getValue());
-//
-//                                                }
-//
-//                                            } else {
-//
-//                                                //location not found in database....so record it
-//
-//                                                Log.d("Location", "New Location recorded, firs time user");
-//                                                Toast.makeText(MainPanel.this, "Current location :" + finalLocation, Toast.LENGTH_SHORT).show();
-//                                                dataSnapshot.getRef().setValue(city);
-//                                            }
-//
-//
-//                                        }
-//
-//                                        @Override
-//                                        public void onCancelled(DatabaseError databaseError) {
-//                                            Log.d("Location", databaseError.getMessage());
-//                                        }
-//                                    });
-//
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                    Log.d(TAG, e.getMessage());
-//
-//                                }
-//
-//                            }
-//                        });
-//
-//            } else {
-//
-//                gpsTracker.showSettingsAlert();
-//
-//            }
-//
-//        }
-//    }
 
 
     /**
@@ -284,7 +196,7 @@ public class MainPanel extends AppCompatActivity {
                                 .crossFade()
                                 .thumbnail(0.5f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .error(R.mipmap.loading)
+                                .error(R.mipmap.error_network)
                                 .into(imgProfile);
 
                     }
@@ -321,6 +233,7 @@ public class MainPanel extends AppCompatActivity {
                         drawer.closeDrawers();
 
                         break;
+
                     case R.id.nav_about_us:
 
                         drawer.closeDrawers();
@@ -387,8 +300,6 @@ public class MainPanel extends AppCompatActivity {
         txtWebsite = (TextView) navHeader.findViewById(R.id.website);
         imgNavHeaderBg = (ImageView) navHeader.findViewById(R.id.img_header_bg);
         imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
-
-
         mHandler = new Handler();
 
     }

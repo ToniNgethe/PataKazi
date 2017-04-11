@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/tv_biddedjobs_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/biddedJobsRv"
+        android:layout_marginTop="235dp"
+        android:gravity="right"
+        android:padding="16dp"
+        android:text="You have not bidded on any jobs yet."
+        android:textSize="20sp" />
+
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/biddedJobsRv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/biddedJobsRv" />
+        android:visibility="gone" />
 
-</LinearLayout>
+</RelativeLayout>

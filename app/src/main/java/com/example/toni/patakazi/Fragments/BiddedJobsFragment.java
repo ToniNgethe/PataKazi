@@ -1,8 +1,6 @@
 package com.example.toni.patakazi.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,13 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.toni.patakazi.Adapters.BiddedJobsAdapter;
-import com.example.toni.patakazi.Adapters.BidderJobAdapter;
 import com.example.toni.patakazi.R;
 import com.example.toni.patakazi.model.Jobs;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,12 +41,14 @@ public class BiddedJobsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private String userID= null;
 
+    private TextView indicator;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.biddedjobs,container,false);
-
+        indicator = (TextView) mView.findViewById(R.id.tv_biddedjobs_indicator);
         //setup rv
 
         recyclerView = (RecyclerView) mView.findViewById(R.id.biddedJobsRv);
@@ -108,14 +107,26 @@ public class BiddedJobsFragment extends Fragment {
 
                                     lists.add(dataSnapshot.getValue(Jobs.class));
 
-                                    BiddedJobsAdapter biddedJobsAdapter = new BiddedJobsAdapter(getActivity().getApplicationContext(), lists);
-                                    recyclerView.setAdapter(biddedJobsAdapter);
-                                    biddedJobsAdapter.notifyDataSetChanged();
+                                    if (lists.size() != 0) {
+
+                                        indicator.setVisibility(View.GONE);
+                                        recyclerView.setVisibility(View.VISIBLE);
+
+                                        BiddedJobsAdapter biddedJobsAdapter = new BiddedJobsAdapter(getActivity().getApplicationContext(), lists);
+                                        recyclerView.setAdapter(biddedJobsAdapter);
+                                        biddedJobsAdapter.notifyDataSetChanged();
+
+                                    }else {
+                                        indicator.setVisibility(View.VISIBLE);
+                                        recyclerView.setVisibility(View.GONE);
+                                    }
 
                                 }catch (NullPointerException e){
                                     Log.d("sonmedfd",e.getMessage());
                                 }
 
+                            }else {
+                                indicator.setVisibility(View.VISIBLE);
                             }
 
                         }
