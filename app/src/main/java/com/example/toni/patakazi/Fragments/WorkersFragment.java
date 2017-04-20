@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.toni.patakazi.Helpers.Global;
+import com.example.toni.patakazi.Helpers.GpsTracker;
 import com.example.toni.patakazi.Helpers.SingleShotLocationProvider;
 import com.example.toni.patakazi.R;
 import com.example.toni.patakazi.SingleWorkerActivity;
@@ -101,31 +102,36 @@ public class WorkersFragment extends Fragment {
 
     private void getLocation() {
 
-        SingleShotLocationProvider.requestSingleUpdate(getActivity(), new SingleShotLocationProvider.LocationCallback() {
-            @Override
-            public void onNewLocationAvailable(Location location) {
+
+        GpsTracker gps = new GpsTracker(getActivity());
+
+        if (gps.canGetLocation()) {
+
+            if (Geocoder.isPresent()) {
 
                 Geocoder geocoder;
                 List<Address> addresses;
+
                 geocoder = new Geocoder(getActivity(), Locale.getDefault());
 
                 try {
-                    addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                    addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                     // address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+
 
                     loc = addresses.get(0).getLocality();
 
                     Log.d(TAG, addresses.get(0).getLocality());
 
-                } catch (IOException e) {
 
+                } catch (IOException e) {
                     e.printStackTrace();
                     Log.d(TAG, e.getMessage());
-
+                }catch (IndexOutOfBoundsException e){
+                    e.printStackTrace();
                 }
             }
-        });
-
+        }
     }
 
     @Override

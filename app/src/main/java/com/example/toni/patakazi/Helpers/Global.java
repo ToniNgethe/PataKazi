@@ -51,19 +51,20 @@ public class Global {
     }
 
     //check connection...
-    public static boolean isConnected(Context context){
+    public static boolean isConnected(Context context) {
 
         boolean connected = false;
 
         ConnectivityManager cm =
-                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-        if (activeNetwork != null && activeNetwork.isConnected()){
+        if (activeNetwork != null && activeNetwork.isConnected()) {
             connected = true;
         }
 
         return connected;
     }
+
 }

@@ -163,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
                 // ...
                 // mPrpgress.setVisibility(View.GONE);
                 googleProgress.dismiss();
-                Toast.makeText(LoginActivity.this, "Error..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Error: " + result.getStatus().getStatusMessage() , Toast.LENGTH_SHORT).show();
             }
         }
     }

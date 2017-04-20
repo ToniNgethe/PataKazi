@@ -78,8 +78,8 @@ public class MainPanel extends AppCompatActivity {
 //        buildGoogleApiClient();
 //        createLocationRequest();
 
-        displayLocation();
         initiLizeFirebase();
+        displayLocation();
         checkUsre();
         setUpViews();
         // load nav menu header data

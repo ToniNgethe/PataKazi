@@ -131,7 +131,7 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
             mUsers = FirebaseDatabase.getInstance().getReference().child("Users");
 
             mJobs.keepSynced(true);
-        }else {
+        } else {
 
             rv.setVisibility(View.GONE);
             indicator.setVisibility(View.GONE);
@@ -161,31 +161,38 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
         GpsTracker gps = new GpsTracker(getActivity());
 
         if (gps.canGetLocation()) {
-           // displayLocation();
+            // displayLocation();
+            if (Geocoder.isPresent()) {
+                Geocoder geocoder;
+                List<Address> addresses;
 
-            Geocoder geocoder;
-            List<Address> addresses;
+                // displayLocation();
 
-           // displayLocation();
+                geocoder = new Geocoder(getActivity(), Locale.getDefault());
 
-            geocoder = new Geocoder(getActivity(), Locale.getDefault());
+                try {
+                    addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                    // address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
 
-            try {
-                addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-               // address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                loc = addresses.get(0).getLocality();
 
-               // Log.d(TAG, String.valueOf(longitude) + " ," + String.valueOf(latitude));
-                Log.d(TAG, "CITY :" + loc);
+                    loc = addresses.get(0).getLocality();
+                    // Log.d(TAG, String.valueOf(longitude) + " ," + String.valueOf(latitude));
+                    Log.d(TAG, "CITY :" + loc);
 
-                Toast.makeText(getActivity(),"Current Location :" + loc,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Current Location :" + loc, Toast.LENGTH_SHORT).show();
 
-            }catch (IOException e){
 
-                Log.d(TAG, e.getMessage());
+                } catch (IOException e) {
+
+                    Log.d(TAG, e.getMessage());
+                } catch (IndexOutOfBoundsException e){
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), "Current Location : Unknown location, try restarting app", Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(getActivity(), "Current Location : Unknown location, try restarting app", Toast.LENGTH_SHORT).show();
             }
-
-
         } else {
             gps.showSettingsAlert();
         }
