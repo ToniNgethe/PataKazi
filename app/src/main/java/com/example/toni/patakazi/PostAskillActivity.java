@@ -55,6 +55,7 @@ public class PostAskillActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private StorageReference mSkillsPics;
+    private String city;
 
     private Handler mHandler;
     private Uri imageUri = null;
@@ -103,6 +104,7 @@ public class PostAskillActivity extends AppCompatActivity {
                                             mdDatabaseReference.child("title").setValue(title.getText().toString());
                                             mdDatabaseReference.child("desc").setValue(desc.getText().toString());
                                             mdDatabaseReference.child("location").setValue(location.getText().toString());
+                                            mdDatabaseReference.child("city").setValue(city);
                                             mdDatabaseReference.child("charges").setValue(Integer.parseInt(charges.getText().toString()));
                                             mdDatabaseReference.child("image").setValue(taskSnapshot.getDownloadUrl().toString());
                                             mdDatabaseReference.child("uid").setValue(mAuth.getCurrentUser().getUid().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -201,7 +203,7 @@ public class PostAskillActivity extends AppCompatActivity {
                             try {
                                 addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                                 String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                                String city = addresses.get(0).getLocality();
+                                city = addresses.get(0).getLocality();
                                 location.setText(city+","+address);
 
 

@@ -65,6 +65,7 @@ public class MainPanel extends AppCompatActivity {
     private DatabaseReference mUsers;
     private Handler mHandler;
     private Boolean exit = false;
+    private int ex = 0;
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
@@ -373,23 +374,16 @@ public class MainPanel extends AppCompatActivity {
             loadHomeFragment();
         }
 
-        if (exit) {
+        if (ex != 0) {
 
             finish(); // finish activity
 
         } else {
             Toast.makeText(this, "Press Back again to Exit.",
                     Toast.LENGTH_SHORT).show();
-
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
-
         }
+
+        ex++;
 
         super.onBackPressed();
     }
