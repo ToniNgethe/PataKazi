@@ -156,11 +156,12 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
 
     private void getLocation() {
 
-        createLocationRequest();
 
         GpsTracker gps = new GpsTracker(getActivity());
 
         if (gps.canGetLocation()) {
+
+            createLocationRequest();
             // displayLocation();
             if (Geocoder.isPresent()) {
                 Geocoder geocoder;
