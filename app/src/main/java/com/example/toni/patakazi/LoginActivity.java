@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 progressDialog.setMessage("Authenticating user...");
+                progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.show();
 
                 if (!TextUtils.isEmpty(email.getText().toString().trim()) && !TextUtils.isEmpty(pass.getText().toString().trim())) {
@@ -255,9 +256,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         progressDialog.dismiss();
 
-
                         Intent launchNextActivity;
-                        launchNextActivity = new Intent(LoginActivity.this, MainPanel.class);
+                        launchNextActivity = new Intent(LoginActivity.this, GetLocationActivity.class);
                         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         launchNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

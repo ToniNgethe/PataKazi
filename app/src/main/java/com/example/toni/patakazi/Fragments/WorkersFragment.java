@@ -3,6 +3,7 @@ package com.example.toni.patakazi.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.location.Address;
@@ -23,9 +24,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.toni.patakazi.GetLocationActivity;
 import com.example.toni.patakazi.Helpers.Global;
 import com.example.toni.patakazi.Helpers.GpsTracker;
 import com.example.toni.patakazi.Helpers.SingleShotLocationProvider;
@@ -102,36 +105,14 @@ public class WorkersFragment extends Fragment {
 
     private void getLocation() {
 
+        SharedPreferences prefs = getActivity().getSharedPreferences(GetLocationActivity.MY_PREFS_NAME, getActivity().MODE_PRIVATE);
+        String restoredText = prefs.getString("text", null);
+        if (restoredText != null) {
+            loc = prefs.getString("location", "location not found");//"No name defined" is the default value.
+        }else {
 
-        GpsTracker gps = new GpsTracker(getActivity());
-
-        if (gps.canGetLocation()) {
-
-            if (Geocoder.isPresent()) {
-
-                Geocoder geocoder;
-                List<Address> addresses;
-
-                geocoder = new Geocoder(getActivity(), Locale.getDefault());
-
-                try {
-                    addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                    // address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-
-
-                    loc = addresses.get(0).getLocality();
-
-                    Log.d(TAG, addresses.get(0).getLocality());
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d(TAG, e.getMessage());
-                }catch (IndexOutOfBoundsException e){
-                    e.printStackTrace();
-                }
-            }
         }
+
     }
 
     @Override

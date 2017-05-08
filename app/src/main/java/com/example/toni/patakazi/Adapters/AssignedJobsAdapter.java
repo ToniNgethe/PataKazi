@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -185,6 +186,9 @@ public class AssignedJobsAdapter extends RecyclerView.Adapter<AssignedJobsViewHo
                                                         //remove from assigned
                                                         DatabaseReference removeAssigned = FirebaseDatabase.getInstance().getReference().child("Assigns");
                                                         removeAssigned.child(finalKey).child(userID).removeValue();
+                                                        holder.confrim.setEnabled(false);
+                                                        Toast.makeText(ctx,"Marked as completed", Toast.LENGTH_SHORT).show();
+
 
                                                         //remove from confirmed;
 //                                                        DatabaseReference removeConfirmed = FirebaseDatabase.getInstance().getReference().child("Confirms");
@@ -339,6 +343,7 @@ class AssignedJobsViewHolder extends RecyclerView.ViewHolder{
                     DatabaseReference removeAssigned = FirebaseDatabase.getInstance().getReference().child("Assigns");
 
                     removeAssigned.child(jobId).child(mAuth.getCurrentUser().getUid()).removeValue();
+
                 }
 
             }

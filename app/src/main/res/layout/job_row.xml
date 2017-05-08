@@ -13,7 +13,7 @@
         android:layout_margin="10dp"
         android:elevation="3dp"
         card_view:cardCornerRadius="@dimen/card_album_radius"
-        card_view:cardElevation="6dp">
+        card_view:cardElevation="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"

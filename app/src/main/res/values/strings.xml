@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PataKazi</string>
+    <string name="app_name">NearJobs</string>
 
     <!-- Navigation Drawer menu labels -->
     <string name="nav_home">Home</string>

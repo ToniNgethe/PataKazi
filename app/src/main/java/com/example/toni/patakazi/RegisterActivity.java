@@ -32,8 +32,6 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.security.PrivateKey;
-
 public class RegisterActivity extends AppCompatActivity {
 
     private static final int GALLERY_REQUEST = 1;
@@ -70,6 +68,13 @@ public class RegisterActivity extends AppCompatActivity {
                 gallery.setType("image/*");
                 startActivityForResult(gallery,GALLERY_REQUEST);
 
+            }
+        });
+
+        backToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               finish();
             }
         });
 
@@ -151,7 +156,8 @@ public class RegisterActivity extends AppCompatActivity {
                                                 if (task.isSuccessful()){
 
                                                     customProgressDialog.dismiss();
-                                                    startActivity(new Intent(RegisterActivity.this,MainPanel.class));
+                                                    startActivity(new Intent(RegisterActivity.this,GetLocationActivity.class));
+                                                    finish();
 
                                                 }else {
 
@@ -211,7 +217,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void setViews() {
 
-        profileImage = (ImageView) findViewById(R.id.profile_image);
+        profileImage = (ImageView) findViewById(R.id.iv_getlocation);
         userName = (EditText) findViewById(R.id.regUsername);
         email = (EditText) findViewById(R.id.regEmail);
         pass = (EditText)findViewById(R.id.regPassword);

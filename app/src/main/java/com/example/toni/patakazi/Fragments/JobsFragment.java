@@ -4,6 +4,7 @@ package com.example.toni.patakazi.Fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -34,6 +35,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.toni.patakazi.GetLocationActivity;
 import com.example.toni.patakazi.Helpers.Global;
 import com.example.toni.patakazi.Helpers.GpsTracker;
 import com.example.toni.patakazi.R;
@@ -156,47 +158,55 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
 
     private void getLocation() {
 
-
-        GpsTracker gps = new GpsTracker(getActivity());
-
-        if (gps.canGetLocation()) {
-
-            createLocationRequest();
-            // displayLocation();
-            if (Geocoder.isPresent()) {
-                Geocoder geocoder;
-                List<Address> addresses;
-
-                // displayLocation();
-
-                geocoder = new Geocoder(getActivity(), Locale.getDefault());
-
-                try {
-                    addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                    // address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-
-
-                    loc = addresses.get(0).getLocality();
-                    // Log.d(TAG, String.valueOf(longitude) + " ," + String.valueOf(latitude));
-                    Log.d(TAG, "CITY :" + loc);
-
-                    Toast.makeText(getActivity(), "Current Location :" + loc, Toast.LENGTH_SHORT).show();
-
-
-                } catch (IOException e) {
-
-                    Log.d(TAG, e.getMessage());
-                } catch (IndexOutOfBoundsException e){
-                    e.printStackTrace();
-                    Toast.makeText(getActivity(), "Current Location : Unknown location, try restarting app", Toast.LENGTH_SHORT).show();
-                }
-
-            } else {
-                Toast.makeText(getActivity(), "Current Location : Unknown location, try restarting app", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            gps.showSettingsAlert();
+        SharedPreferences prefs = getActivity().getSharedPreferences(GetLocationActivity.MY_PREFS_NAME, getActivity().MODE_PRIVATE);
+        String restoredText = prefs.getString("location", null);
+        if (restoredText != null) {
+            loc = prefs.getString("location", "location not found");//"No name defined" is the default value.
+            Toast.makeText(getActivity(), "Current Location :" + loc, Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getActivity(), "Current Location :" + loc, Toast.LENGTH_SHORT).show();
         }
+
+//        GpsTracker gps = new GpsTracker(getActivity());
+//
+//        if (gps.canGetLocation()) {
+//
+//            createLocationRequest();
+//            // displayLocation();
+//            if (Geocoder.isPresent()) {
+//                Geocoder geocoder;
+//                List<Address> addresses;
+//
+//                // displayLocation();
+//
+//                geocoder = new Geocoder(getActivity(), Locale.getDefault());
+//
+//                try {
+//                    addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+//                    // address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//
+//
+//                    loc = addresses.get(0).getLocality();
+//                    // Log.d(TAG, String.valueOf(longitude) + " ," + String.valueOf(latitude));
+//                    Log.d(TAG, "CITY :" + loc);
+//
+//                    Toast.makeText(getActivity(), "Current Location :" + loc, Toast.LENGTH_SHORT).show();
+//
+//
+//                } catch (IOException e) {
+//
+//                    Log.d(TAG, e.getMessage());
+//                } catch (IndexOutOfBoundsException e){
+//                    e.printStackTrace();
+//                    Toast.makeText(getActivity(), "Current Location : Unknown location, try restarting app", Toast.LENGTH_SHORT).show();
+//                }
+//
+//            } else {
+//                Toast.makeText(getActivity(), "Current Location : Unknown location, try restarting app", Toast.LENGTH_SHORT).show();
+//            }
+//        } else {
+//            gps.showSettingsAlert();
+//        }
 
     }
 

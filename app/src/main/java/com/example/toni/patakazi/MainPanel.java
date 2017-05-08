@@ -1,12 +1,14 @@
 package com.example.toni.patakazi;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -342,6 +344,9 @@ public class MainPanel extends AppCompatActivity {
             case R.id.action_logout:
 
                 if (mAuth != null) {
+                    PreferenceManager.getDefaultSharedPreferences(getBaseContext()).
+                            edit().clear().apply();
+
                     mAuth.signOut();
 
                 }
@@ -351,6 +356,7 @@ public class MainPanel extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -374,17 +380,7 @@ public class MainPanel extends AppCompatActivity {
             loadHomeFragment();
         }
 
-        if (ex != 0) {
-
-            finish(); // finish activity
-
-        } else {
-            Toast.makeText(this, "Press Back again to Exit.",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-        ex++;
-
+        
         super.onBackPressed();
     }
 

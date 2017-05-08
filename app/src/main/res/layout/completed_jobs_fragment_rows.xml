@@ -144,27 +144,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <Button
-                    android:text="Rate job"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/button4"
-                    android:layout_weight="1"
-                    android:drawableLeft="@mipmap/ic_star_rate_black_18dp"
-                    android:textSize="12sp"
-                    android:textAllCaps="false"
-                    style="@style/Widget.AppCompat.Button.Borderless" />
-
-                <Button
-                    android:text="Write review"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/button3"
-                    android:layout_weight="1"
-                    android:drawableLeft="@mipmap/ic_rate_review_black_18dp"
-                    android:textSize="12sp"
-                    android:textAllCaps="false"
-                    style="@style/Widget.AppCompat.Button.Borderless" />
             </LinearLayout>
 
         </LinearLayout>
