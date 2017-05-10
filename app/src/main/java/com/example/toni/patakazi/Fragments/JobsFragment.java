@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -26,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +71,7 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
     private static final String TAG = JobsFragment.class.getSimpleName();
     private View myView;
     private RecyclerView rv;
+    private LinearLayout lm;
 
     private DatabaseReference mJobs;
     private DatabaseReference mUsers;
@@ -113,16 +116,18 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
         network_indicator = (ImageView) myView.findViewById(R.id.iv_jobs_indicator);
         rv = (RecyclerView) myView.findViewById(R.id.jobs_rv);
         indicator = (TextView) myView.findViewById(R.id.tv_jobsFragment);
+        lm = (LinearLayout) myView.findViewById(R.id.linearlayout_jobs);
+        lm.setVisibility(View.GONE);
         // Building the GoogleApi client
         buildGoogleApiClient();
 
         if (Global.isConnected(getActivity())) {
             displayLocation();
             network_indicator.setVisibility(View.GONE);
-
             getLocation();
-            RecyclerView.LayoutManager lm = new GridLayoutManager(getActivity(), 2);
 
+
+            RecyclerView.LayoutManager lm = new GridLayoutManager(getActivity(), 2);
             rv.setLayoutManager(lm);
             rv.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(6), true));
             rv.setItemAnimator(new DefaultItemAnimator());
@@ -162,63 +167,11 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
         String restoredText = prefs.getString("location", null);
         if (restoredText != null) {
             loc = prefs.getString("location", "location not found");//"No name defined" is the default value.
-            Toast.makeText(getActivity(), "Current Location :" + loc, Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(getActivity(), "Current Location :" + loc, Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(getActivity(), "Current Location :" + loc, Toast.LENGTH_SHORT).show();
+        } else {
+           // Toast.makeText(getActivity(), "Current Location :" + loc, Toast.LENGTH_SHORT).show();
         }
 
-//        GpsTracker gps = new GpsTracker(getActivity());
-//
-//        if (gps.canGetLocation()) {
-//
-//            createLocationRequest();
-//            // displayLocation();
-//            if (Geocoder.isPresent()) {
-//                Geocoder geocoder;
-//                List<Address> addresses;
-//
-//                // displayLocation();
-//
-//                geocoder = new Geocoder(getActivity(), Locale.getDefault());
-//
-//                try {
-//                    addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-//                    // address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-//
-//
-//                    loc = addresses.get(0).getLocality();
-//                    // Log.d(TAG, String.valueOf(longitude) + " ," + String.valueOf(latitude));
-//                    Log.d(TAG, "CITY :" + loc);
-//
-//                    Toast.makeText(getActivity(), "Current Location :" + loc, Toast.LENGTH_SHORT).show();
-//
-//
-//                } catch (IOException e) {
-//
-//                    Log.d(TAG, e.getMessage());
-//                } catch (IndexOutOfBoundsException e){
-//                    e.printStackTrace();
-//                    Toast.makeText(getActivity(), "Current Location : Unknown location, try restarting app", Toast.LENGTH_SHORT).show();
-//                }
-//
-//            } else {
-//                Toast.makeText(getActivity(), "Current Location : Unknown location, try restarting app", Toast.LENGTH_SHORT).show();
-//            }
-//        } else {
-//            gps.showSettingsAlert();
-//        }
-
-    }
-
-    /**
-     * Creating location request object
-     */
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 
     /**
@@ -235,6 +188,20 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
 
 
         query = mJobs.orderByChild("city").equalTo(loc);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists()){
+                        lm.setVisibility(View.VISIBLE);
+                        rv.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         FirebaseRecyclerAdapter<Jobs, JobsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Jobs, JobsViewHolder>(
 
@@ -246,36 +213,28 @@ public class JobsFragment extends Fragment implements GoogleApiClient.Connection
         ) {
             @Override
             protected void populateViewHolder(JobsViewHolder viewHolder, Jobs model, int position) {
+                indicator.setVisibility(View.GONE);
 
-                //progressBar.setVisibility(View.GONE);
+                lm.setVisibility(View.GONE);
+                rv.setVisibility(View.VISIBLE);
+                final String jobID = getRef(position).getKey();
 
-                if (model != null) {
+                viewHolder.setImage(getActivity(), model.getImage());
+                viewHolder.setTitle(model.getTitle());
+                viewHolder.setCharge(model.getCharges());
 
-                    indicator.setVisibility(View.GONE);
+                viewHolder.checkJobIfClosed(jobID);
 
-                    final String jobID = getRef(position).getKey();
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
-                    viewHolder.setImage(getActivity(), model.getImage());
-                    viewHolder.setTitle(model.getTitle());
-                    viewHolder.setCharge(model.getCharges());
+                        Intent singlePost = new Intent(getActivity(), SingleJobActiivity.class);
+                        singlePost.putExtra("jobiD", jobID);
+                        startActivity(singlePost);
 
-                    viewHolder.checkJobIfClosed(jobID);
-
-                    viewHolder.mView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            Intent singlePost = new Intent(getActivity(), SingleJobActiivity.class);
-                            singlePost.putExtra("jobiD", jobID);
-                            startActivity(singlePost);
-
-                        }
-                    });
-                } else {
-
-                    indicator.setVisibility(View.VISIBLE);
-                    rv.setVisibility(View.GONE);
-                }
+                    }
+                });
 
             }
         };

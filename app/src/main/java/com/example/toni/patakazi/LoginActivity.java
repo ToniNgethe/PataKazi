@@ -252,6 +252,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         startActivity(new Intent(LoginActivity.this, SetupActivity.class));
                         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+                        finish();
                     } else {
 
                         progressDialog.dismiss();
@@ -265,6 +266,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         // startActivity(new Intent(LoginActivity.this, MainPanel.class));
                         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+                        finish();
                     }
 
                 }

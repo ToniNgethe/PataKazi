@@ -7,30 +7,51 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <TextView
-        android:id="@+id/tv_jobsFragment"
+    <LinearLayout
+        android:id="@+id/linearlayout_jobs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal|center"
-        android:padding="10dp"
-        android:text=":( No jobs found at your current location. Press + to get started"
-        android:textSize="18sp" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/iv_jobs_indicator"
+        android:layout_marginTop="107dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="match_parent"
+            android:layout_height="204dp"
+            app:srcCompat="@mipmap/oops_icon" />
+
+        <TextView
+            android:id="@+id/tv_jobsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:padding="10dp"
+            android:text=":( No jobs found at your current location. Press + to get started"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:visibility="visible" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_jobs_indicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         app:srcCompat="@mipmap/error_network" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/jobs_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:scrollbars="vertical"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:clipToPadding="false"
+        android:scrollbars="vertical"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>

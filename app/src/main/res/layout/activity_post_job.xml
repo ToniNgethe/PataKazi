@@ -52,65 +52,53 @@
 
                 <View
                     android:layout_width="fill_parent"
+
+                    android:layout_marginBottom="5dp"
                     android:background="@color/colorAccent"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"
                     android:layout_height="3dp" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/input_layout_password"
-                    android:layout_width="match_parent"
-                    android:layout_margin="5dp"
-                    android:layout_height="wrap_content">
-
                     <EditText
+                        android:padding="16dp"
                         android:id="@+id/etJobTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Title"
                         android:maxLines="1"
+                        android:layout_margin="5dp"
                         android:textSize="14sp"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:background="@drawable/input2"/>
 
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/desc2"
-                    android:layout_width="match_parent"
-                    android:layout_margin="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.31">
                     <EditText
+                        android:padding="10dp"
                         android:id="@+id/etDesc"
+                        android:background="@drawable/input2"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="82dp"
                         android:hint="Job Description"
                         android:textSize="14sp"
+                        android:layout_margin="5dp"
                         android:inputType="textMultiLine" />
-
-                </android.support.design.widget.TextInputLayout>
 
 
                 <LinearLayout
                     android:orientation="horizontal"
+                    android:layout_margin="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/location"
-                        android:layout_width="224dp"
-                        android:layout_margin="5dp"
-                        android:layout_height="wrap_content">
-
                         <EditText
+                            android:background="@drawable/input2"
                             android:id="@+id/etLoc"
-                            android:layout_width="262dp"
+                            android:padding="16dp"
+                            android:layout_width="222dp"
                             android:layout_height="wrap_content"
                             android:hint="Job Location"
                             android:textSize="14sp"
                             android:singleLine="true" />
 
-                    </android.support.design.widget.TextInputLayout>
 
                     <Button
                         android:text="Locate me"
@@ -130,16 +118,16 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="182dp"
+            android:layout_height="224dp"
             android:orientation="horizontal"
             android:weightSum="1">
+
             <android.support.v7.widget.CardView
-                android:layout_width="169dp"
+                android:layout_width="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_height="159dp"
-                android:layout_weight="0.22">
+                android:layout_height="186dp">
 
                 <TextView
                     android:text="Additonal Details"
@@ -165,44 +153,34 @@
                         android:layout_height="3dp" />
 
                     <LinearLayout
+                        android:layout_marginTop="14dp"
                         android:orientation="vertical"
                         android:layout_width="186dp"
-                        android:layout_height="wrap_content">
+                        android:layout_height="match_parent">
 
-                        <android.support.design.widget.TextInputLayout
-                            android:id="@+id/desc23"
-                            android:layout_width="wrap_content"
+                        <EditText
+                            android:id="@+id/etCharges"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:layout_height="wrap_content">
-                            <EditText
-                                android:id="@+id/etCharges"
-                                android:layout_width="154dp"
-                                android:layout_height="37dp"
-                                android:hint="Charges per hour (Ksh)"
-                                android:textSize="14sp"
-                                android:maxLines="1"
-                                android:inputType="numberDecimal" />
-
-                        </android.support.design.widget.TextInputLayout>
-
-
-
-                        <android.support.design.widget.TextInputLayout
-                            android:id="@+id/descdsf"
-                            android:layout_width="154dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_height="wrap_content">
+                            android:background="@drawable/input2"
+                            android:hint="Charges per hour (Ksh)"
+                            android:inputType="number|numberDecimal"
+                            android:maxLines="1"
+                            android:padding="16dp"
+                            android:textSize="14sp" />
 
                             <EditText
+                                android:background="@drawable/input2"
                                 android:maxLines="1"
+                                android:layout_margin="5dp"
+                                android:padding="16dp"
                                 android:id="@+id/workers"
-                                android:layout_width="154dp"
-                                android:layout_height="37dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:hint="No. of workers..."
                                 android:textSize="14sp"
                                 android:inputType="numberDecimal" />
-
-                        </android.support.design.widget.TextInputLayout>
 
                     </LinearLayout>
 
@@ -212,13 +190,16 @@
             </android.support.v7.widget.CardView>
 
             <ImageButton
-                android:layout_height="166dp"
+
+                android:layout_height="146dp"
                 app:srcCompat="@mipmap/attach"
                 android:id="@+id/jobImage"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="10dp"
+
                 android:layout_weight="0.27"
                 android:adjustViewBounds="true"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="34dp"
+                android:layout_marginRight="10dp"
                 android:scaleType="centerCrop"
                 android:layout_width="146dp" />
 

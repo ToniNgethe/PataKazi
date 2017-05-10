@@ -253,7 +253,7 @@ public class GetLocationActivity extends AppCompatActivity {
                 startActivity(new Intent(GetLocationActivity.this, MainPanel.class));
                 finish();
             }
-        },2000);
+        },3000);
 
     }
 
