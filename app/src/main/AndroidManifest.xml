@@ -1,40 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.toni.patakazi">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.toni.patakazi">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".PataKaziApplication"
+        android:name=".App"
         android:allowBackup="true"
-        android:hardwareAccelerated="false"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".MainPanel">
-        </activity>
+        <activity android:name=".ui.Activities.MainPanel" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".ui.intro_ui.LoginActivity" />
+        <activity android:name=".ui.intro_ui.RegisterActivity" />
         <activity
-            android:name=".PostJobActivity"
-            android:parentActivityName=".MainPanel" />
-        <activity android:name=".MainActivity" />
+            android:name=".ui.Activities.PostJobActivity"
+            android:parentActivityName=".ui.Activities.MainPanel" />
+        <activity android:name=".ui.MainActivity" />
         <activity android:name=".SetupActivity" />
         <activity
             android:name=".SingleJobActiivity"
-            android:parentActivityName=".MainPanel" />
+            android:parentActivityName=".ui.Activities.MainPanel" />
         <activity
             android:name=".BiddedJobActivity"
             android:parentActivityName=".MyPostedJobsActivity" />
@@ -42,25 +48,32 @@
             android:name=".BidderProfileActivity"
             android:parentActivityName=".BiddedJobActivity" />
         <activity
-            android:name=".PostAskillActivity"
-            android:parentActivityName=".MainPanel" />
+            android:name=".ui.Activities.PostAskillActivity"
+            android:parentActivityName=".ui.Activities.MainPanel" />
         <activity
             android:name=".JobsDue"
-            android:parentActivityName=".MainPanel" />
+            android:parentActivityName=".ui.Activities.MainPanel" />
         <activity
             android:name=".MyPostedJobsActivity"
-            android:parentActivityName=".MainPanel" />
+            android:parentActivityName=".ui.Activities.MainPanel" />
         <activity
             android:name=".CompletedWorkers"
             android:parentActivityName=".MyPostedJobsActivity" />
         <activity android:name=".SingleWorkerActivity" />
-        <activity android:name=".GetLocationActivity">
+        <activity android:name=".ui.intro_ui.GetLocationActivity" />
+        <activity android:name=".ui.Activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.MainPanel_v2"
+            android:label="@string/title_activity_main_panel_v2" />
+        <activity
+            android:name=".ui.Main2Activity"
+            android:label="@string/title_activity_main2"></activity>
     </application>
 
 </manifest>

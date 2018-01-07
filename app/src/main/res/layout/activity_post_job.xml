@@ -5,109 +5,124 @@
     android:id="@+id/activity_post_job"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.toni.patakazi.PostJobActivity">
+    tools:context="com.toni.patakazi.ui.Activities.PostJobActivity">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="?attr/actionBarTheme"
-        android:minHeight="?attr/actionBarSize"
-        android:id="@+id/toolbar"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:id="@+id/scrollView2">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1"
-        android:layout_below="@+id/toolbar"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="12dp">
+
+        android:layout_marginTop="12dp"
+        android:orientation="vertical"
+        android:weightSum="1">
 
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="269dp"
-            app:cardElevation="3dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp">
+            android:layout_marginRight="5dp"
+            app:cardElevation="3dp">
 
             <TextView
-                android:text="Job Details"
+                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView"
                 android:layout_margin="10dp"
-                android:textSize="15sp"
-                android:textColor="@color/colorAccent" />
+                android:text="Job Details"
+                android:textColor="@color/colorAccent"
+                android:textSize="15sp" />
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="40dp"
+                android:orientation="vertical"
                 android:weightSum="1">
 
                 <View
                     android:layout_width="fill_parent"
 
-                    android:layout_marginBottom="5dp"
-                    android:background="@color/colorAccent"
+                    android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"
-                    android:layout_height="3dp" />
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@color/colorAccent" />
 
-                    <EditText
-                        android:padding="16dp"
-                        android:id="@+id/etJobTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Title"
-                        android:maxLines="1"
-                        android:layout_margin="5dp"
-                        android:textSize="14sp"
-                        android:inputType="text"
-                        android:background="@drawable/input2"/>
+                <EditText
+                    android:id="@+id/etJobTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="#f0f0f4"
+                    android:fontFamily="@font/lato_light"
+                    android:hint="Title"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="12dp"
+                    android:textColor="#000" />
 
-                    <EditText
-                        android:padding="10dp"
-                        android:id="@+id/etDesc"
-                        android:background="@drawable/input2"
-                        android:layout_width="match_parent"
-                        android:layout_height="82dp"
-                        android:hint="Job Description"
-                        android:textSize="14sp"
-                        android:layout_margin="5dp"
-                        android:inputType="textMultiLine" />
+
+                <EditText
+                    android:id="@+id/etDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="82dp"
+                    android:layout_margin="5dp"
+                    android:background="#f0f0f4"
+                    android:gravity="top"
+                    android:fontFamily="@font/lato_light"
+                    android:hint="Job Description"
+                    android:inputType="textMultiLine"
+                    android:padding="12dp"
+                    android:textColor="#000"
+                    android:textSize="14sp" />
 
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_margin="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal">
 
-                        <EditText
-                            android:background="@drawable/input2"
-                            android:id="@+id/etLoc"
-                            android:padding="16dp"
-                            android:layout_width="222dp"
-                            android:layout_height="wrap_content"
-                            android:hint="Job Location"
-                            android:textSize="14sp"
-                            android:singleLine="true" />
+                    <EditText
+                        android:id="@+id/etLoc"
+                        android:layout_width="222dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="#f0f0f4"
+                        android:fontFamily="@font/lato_light"
+                        android:hint="Job Location"
+                        android:padding="12dp"
+                        android:singleLine="true"
+                        android:textColor="#000"
+                        android:textSize="14sp" />
 
 
                     <Button
-                        android:text="Locate me"
+                        android:id="@+id/btnLocateMe"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/btnLocateMe"
                         android:layout_marginLeft="20dp"
-                        android:textAllCaps="false"
-                        style="@style/Widget.AppCompat.Button.Borderless.Colored" />
+                        android:text="Locate me"
+                        android:textAllCaps="false" />
 
 
                 </LinearLayout>
@@ -118,69 +133,77 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="224dp"
+            android:layout_height="184dp"
             android:orientation="horizontal"
             android:weightSum="1">
 
             <android.support.v7.widget.CardView
                 android:layout_width="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="5dp"
-                android:layout_height="186dp">
+                android:layout_marginTop="10dp">
 
                 <TextView
-                    android:text="Additonal Details"
+                    android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView2"
                     android:layout_margin="10dp"
-                    android:textSize="15sp"
-                    android:textColor="@color/colorAccent" />
+                    android:text="Additonal Details"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="15sp" />
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="40dp"
+                    android:orientation="vertical"
                     android:weightSum="1">
 
                     <View
                         android:layout_width="fill_parent"
-                        android:background="@color/colorAccent"
+                        android:layout_height="1dp"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentStart="true"
-                        android:layout_height="3dp" />
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/colorAccent" />
 
                     <LinearLayout
-                        android:layout_marginTop="14dp"
-                        android:orientation="vertical"
                         android:layout_width="186dp"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="14dp"
+                        android:orientation="vertical">
 
                         <EditText
                             android:id="@+id/etCharges"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:background="@drawable/input2"
+                            android:background="#f0f0f4"
                             android:hint="Charges per hour (Ksh)"
                             android:inputType="number|numberDecimal"
                             android:maxLines="1"
-                            android:padding="16dp"
+                            android:padding="12dp"
+                            android:textColor="#000"
+
                             android:textSize="14sp" />
 
-                            <EditText
-                                android:background="@drawable/input2"
-                                android:maxLines="1"
-                                android:layout_margin="5dp"
-                                android:padding="16dp"
-                                android:id="@+id/workers"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="No. of workers..."
-                                android:textSize="14sp"
-                                android:inputType="numberDecimal" />
+                        <EditText
+
+                            android:id="@+id/workers"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="#f0f0f4"
+
+                            android:hint="No. of workers..."
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:padding="12dp"
+                            android:textColor="#000"
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -191,29 +214,56 @@
 
             <ImageButton
 
-                android:layout_height="146dp"
-                app:srcCompat="@mipmap/attach"
                 android:id="@+id/jobImage"
-                android:layout_marginLeft="10dp"
-
-                android:layout_weight="0.27"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="10dp"
+                android:padding="20dp"
+                android:layout_marginBottom="14dp"
                 android:adjustViewBounds="true"
-                android:layout_marginTop="34dp"
-                android:layout_marginRight="10dp"
+                android:background="@android:color/transparent"
                 android:scaleType="centerCrop"
-                android:layout_width="146dp" />
+                app:srcCompat="@mipmap/attach" />
 
         </LinearLayout>
 
     </LinearLayout>
+    </ScrollView>
 
-    <Button
-        android:text="Post"
+    <android.support.v7.widget.CardView
+        android:id="@+id/btnPostJob"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/btnPostJob"
         android:layout_alignParentBottom="true"
-        style="@style/Widget.AppCompat.Button.Colored" />
+        android:layout_alignParentStart="true"
+        app:cardBackgroundColor="@color/colorAccent" >
+
+        <TextView
+            android:id="@+id/textView20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/lato_regular"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Post Job"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </android.support.v7.widget.CardView>
+
+    <!--<Button-->
+        <!--android:id="@+id/btnPostJob"-->
+        <!--style="@style/Widget.AppCompat.Button.Colored"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_below="@+id/scrollView2"-->
+        <!--android:layout_marginTop="13dp"-->
+        <!--android:background="@drawable/rounded1"-->
+        <!--android:text="Post" />-->
+
+
 
 </RelativeLayout>

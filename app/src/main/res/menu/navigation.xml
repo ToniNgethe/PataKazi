@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/tab_jobs"
+        android:icon="@mipmap/jobs"
+        android:title="@string/jobs"
+
+        />
+
+    <item
+        android:id="@+id/tab_workers"
+        android:icon="@mipmap/workers_team"
+        android:title="@string/workers" />
+
+    <item
+        android:id="@+id/tab_account"
+        android:icon="@mipmap/ic_account_box_black_24dp"
+        android:title="@string/account" />
+
+</menu>

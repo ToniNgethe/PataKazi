@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1030378882851-iks7j00boo0iuh28s45228m2plqltni0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.toni.patakazi",
+            "certificate_hash": "c0b0fa9d052ef4068b169f477db0473f8ebd379e"
+          }
+        },
+        {
           "client_id": "1030378882851-qidufna9h7t27b595lecmm1uve7u7aso.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,57 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1030378882851-qidufna9h7t27b595lecmm1uve7u7aso.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1030378882851:android:dcc3757c9ebe1436",
+        "android_client_info": {
+          "package_name": "com.toni.patakazi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1030378882851-3fdffb7k2iq0s2bvs7n4mol0moi15vnc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.toni.patakazi",
+            "certificate_hash": "c0b0fa9d052ef4068b169f477db0473f8ebd379e"
+          }
+        },
+        {
+          "client_id": "1030378882851-qidufna9h7t27b595lecmm1uve7u7aso.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdCKUfJGKd-6fW84RRmBH50m150rt9k8g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1030378882851-qidufna9h7t27b595lecmm1uve7u7aso.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

@@ -5,9 +5,38 @@
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.toni.patakazi.LoginActivity"
+    tools:context=".ui.intro_ui.LoginActivity"
     android:background="@android:color/white">
 
+
+    <Button
+        android:id="@+id/signUp_btn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_weight="1"
+        android:gravity="right|center"
+        android:text="or Sign up"
+        android:textAllCaps="false"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/forgotPass"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:gravity="left|center"
+        android:padding="5dp"
+        android:text="forgot password?"
+        android:textAllCaps="false"
+        android:textColorLink="@android:color/holo_green_dark"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/PataKazi"
@@ -26,122 +55,82 @@
 
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="160dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/PataKazi"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="10dp"
         android:padding="30dp"
         app:srcCompat="@mipmap/logo" />
 
     <LinearLayout
         android:id="@+id/loginBox"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/imageView"
         android:layout_margin="10dp"
-        >
+        android:layout_marginLeft="69dp"
+        android:orientation="vertical">
 
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/loginEmail_tf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
             android:hint="Email"
-            app:met_floatingLabelText="Email"
-            app:met_primaryColor="@color/colorAccent"
             app:met_floatingLabel="highlight"
-            app:met_iconLeft = "@mipmap/ic_email_black_24dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp"
-            />
+            app:met_floatingLabelText="Email"
+            app:met_iconLeft="@mipmap/ic_email_black_24dp"
+            app:met_primaryColor="@color/colorAccent" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/loginPassword_tf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
             android:hint="Password"
             android:inputType="textPassword"
-            app:met_primaryColor="@color/colorAccent"
             app:met_floatingLabel="highlight"
-            app:met_iconLeft = "@mipmap/ic_lock_black_24dp"
-     android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp"
 
-            />
+            app:met_iconLeft="@mipmap/ic_lock_black_24dp"
+            app:met_primaryColor="@color/colorAccent" />
 
         <Button
+            android:id="@+id/loginBtn"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:text="Login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/loginBtn"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="69dp"
-            android:layout_marginRight="19dp" />
+            android:drawableLeft="@drawable/login"
+            android:text="Login" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="or"
+            android:textSize="18sp" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_signin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/loginBox"
+            android:layout_below="@+id/loginBox"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/rounded1"
+            android:layout_marginRight="25dp"
+            android:scrollbarAlwaysDrawVerticalTrack="true">
+
+        </com.google.android.gms.common.SignInButton>
 
     </LinearLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#c0c0c0"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="100dp"
-        android:id="@+id/view" />
-
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_signin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:layout_weight="0.36"
-        android:layout_marginLeft="80dp"
-        android:layout_marginRight="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="23dp">
-
-    </com.google.android.gms.common.SignInButton>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/view"
-
-        android:layout_alignEnd="@+id/loginBox"
-        android:weightSum="1">
-
-        <Button
-            android:background="#ffffff"
-            android:text="forgot password?"
-            android:textAllCaps="false"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:id="@+id/forgotPass"
-            android:textSize="12sp"
-            android:layout_marginStart="10dp"
-            android:textColorLink="@android:color/holo_green_dark"
-           />
-
-        <Button
-            android:text="or Sign up"
-            android:textSize="12sp"
-             android:layout_width="wrap_content"
-            android:textAllCaps="false"
-             android:layout_height="36dp"
-
-             style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_marginLeft="160dp"
-            android:id="@+id/signUp_btn"
-            android:layout_weight="0.09" />
-
-    </LinearLayout>
 
 </RelativeLayout>

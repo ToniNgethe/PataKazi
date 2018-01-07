@@ -18,4 +18,8 @@
         android:layout_below="@+id/postedAssignedRv"
         android:layout_alignParentStart="true"
         android:layout_height="40dp" />
+
+    <include
+        layout="@layout/empty_layout"
+        />
 </RelativeLayout>

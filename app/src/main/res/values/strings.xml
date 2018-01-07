@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NearJobs</string>
+    <string name="app_name">PataKazi</string>
 
     <!-- Navigation Drawer menu labels -->
     <string name="nav_home">Home</string>
@@ -29,5 +29,16 @@
     <string name="title_activity_poste_jobs">PosteJobs</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="loading_text">please wait</string>
+    <string name="fields_empty">Empyt fields</string>
+    <string name="global_error">Unable to process your request at the moment!Try later</string>
+    <string name="title_activity_main_panel_v2">MainPanel_v2</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="jobs">Jobs</string>
+    <string name="workers">Workers</string>
+    <string name="account">Account</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
 </resources>

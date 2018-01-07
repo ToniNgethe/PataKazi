@@ -1,16 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
     defaultConfig {
-        applicationId "com.example.toni.patakazi"
+        applicationId "com.toni.patakazi"
         minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -21,40 +22,54 @@ android {
 }
 
 dependencies {
+
+    // multidex...
+    compile 'com.android.support:multidex:1.0.2'
+
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    //database lib
-    //firebase library
-    // CardView
-    // Glide image library
-    // RecyclerView
+
     //noinspection GradleCompatible
-    compile 'com.android.support:recyclerview-v7:25.0.1'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
     testCompile 'junit:junit:4.12'
-
-
-    compile 'com.android.support:recyclerview-v7:25.0.1'
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:design:25.0.1'
-    compile 'com.google.android.gms:play-services-auth:10.0.0'
-    compile 'com.google.firebase:firebase-database:10.0.0'
-    compile 'com.google.firebase:firebase-storage:10.0.0'
+    compile 'com.android.support:support-vector-drawable:26.1.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.google.android.gms:play-services-auth:11.6.2'
+    compile 'com.google.firebase:firebase-database:11.6.2'
+    compile 'com.google.firebase:firebase-storage:11.6.2'
     compile 'com.firebaseui:firebase-ui:0.6.0'
-    compile 'com.google.firebase:firebase-auth:10.0.0'
-    compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'com.android.support:cardview-v7:25.0.1'
+    compile 'com.google.firebase:firebase-auth:11.6.2'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
+    compile 'com.android.support:cardview-v7:26.1.0'
     compile 'com.roughike:bottom-bar:2.0.1'
     compile 'com.theartofdev.edmodo:android-image-cropper:2.3.0'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.google.android.gms:play-services-location:10.0.0'
+    compile 'com.google.android.gms:play-services-location:11.6.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.android.gms:play-services-maps:10.0.0'
+    compile 'com.google.android.gms:play-services-maps:11.6.2'
     testCompile 'junit:junit:4.12'
+
+    //butterknife
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    //TOASTY
+    compile 'com.github.GrenderG:Toasty:1.2.5'
+
+    //retrofit
+    compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+    //sweetAlert alert lib
+    compile project(path: ':s_alerts')
 }
 
 apply plugin: 'com.google.gms.google-services'

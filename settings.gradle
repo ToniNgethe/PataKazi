@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':s_alerts'
+project(':s_alerts').projectDir = new File('sweet_alert')

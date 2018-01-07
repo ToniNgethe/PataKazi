@@ -6,30 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context="com.example.toni.patakazi.SetupActivity">
+    tools:context="com.toni.patakazi.SetupActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:background="@android:color/white"
-        android:weightSum="1"
-        android:layout_height="280dp"
-        android:id="@+id/linearLayout">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/setUpProfilePic"
-            android:layout_width="210dp"
-            android:src="@drawable/add_image"
-            android:layout_marginTop="50dp"
-            app:civ_border_width="0.0dp"
-            android:layout_marginBottom="5dp"
-            android:layout_gravity="center"
-            app:civ_border_color="#FF000000"
-            android:layout_height="101dp"
-            android:adjustViewBounds="false"
-            android:layout_weight="0.46" />
-
-    </LinearLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/setUpProfilePic"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="74dp"
+        android:layout_weight="0.46"
+        android:adjustViewBounds="false"
+        android:padding="5dp"
+        android:src="@drawable/user"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="0.0dp" />
 
     <Button
         android:text="Submit"
@@ -45,16 +37,27 @@
         android:id="@+id/setUpUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/setUpProfilePic"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="44dp"
         android:hint="Username"
         app:met_floatingLabel="highlight"
-        app:met_iconLeft = "@mipmap/ic_account_box_black_24dp"
         app:met_floatingLabelText="Username"
-        app:met_primaryColor="@color/colorAccent"
+        app:met_iconLeft="@mipmap/ic_account_box_black_24dp"
+        app:met_primaryColor="@color/colorAccent" />
 
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="101dp" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/setUpProfilePic"
+        android:layout_alignEnd="@+id/setUpProfilePic"
+        android:layout_marginEnd="14dp"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_add_a_photo_white_24dp" />
 
 </RelativeLayout>
